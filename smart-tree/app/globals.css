@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.tree {
+  --tree-line-color: #666;
+  --tree-ol-rail-x: 12px;
+  --tree-ol-branch: 12px;
+  --tree-line-width: 1px;
+}
+
+.tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  margin: 0 0 1em;
+  text-align: center;
+  display: table;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: table;
+    width: 100%;
+    &:before {
+      border-left: var(--tree-line-width) solid var(--tree-line-color);
+      content: "";
+      height: 0.5em;
+      left: 50%;
+      position: absolute;
+      top: -0.5em;
+      width: 0;
+    }
+  }
+  li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: table-cell;
+    padding: 0.5em 0;
+    vertical-align: top;
+    &:before {
+      border-top: var(--tree-line-width) solid var(--tree-line-color);
+      content: "";
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 0;
+    }
+    &:first-child {
+      &:before {
+        left: 50%;
+      }
+    }
+    &:last-child {
+      &:before {
+        right: 50%;
+      }
+    }
+  }
+  code {
+    border: var(--tree-line-width) solid var(--tree-line-color);
+    border-radius: 0.2em;
+    display: inline-block;
+    margin: 0 0.2em 0.5em;
+    padding: 0.2em 0.5em;
+    position: relative;
+    &:before {
+      border-left: var(--tree-line-width) solid var(--tree-line-color);
+      content: "";
+      height: 0.5em;
+      left: 50%;
+      position: absolute;
+      top: calc(-0.5em - var(--tree-line-width));
+      width: 0;
+    }
+  }
+  span {
+    border: var(--tree-line-width) solid var(--tree-line-color);
+    border-radius: 0.2em;
+    display: inline-block;
+    margin: 0 0.2em 0.5em;
+    padding: 0.2em 0.5em;
+    position: relative;
+    &:before {
+      border-left: var(--tree-line-width) solid var(--tree-line-color);
+      content: "";
+      height: 0.5em;
+      left: 50%;
+      position: absolute;
+      top: calc(-0.5em - var(--tree-line-width));
+      width: 0;
+    }
+  }
+  > li {
+    margin-top: 0;
+    &:before {
+      outline: none;
+    }
+    &:after {
+      outline: none;
+    }
+    > code {
+      &:before {
+        outline: none;
+      }
+    }
+    > span {
+      &:before {
+        outline: none;
+      }
+    }
+  }
+}
+
+.tree .vertical-children {
+  display: block;
+  margin-top: -0.5em;
+  padding-top: 0.5em;
+  position: relative;
+  text-align: left;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tree .vertical-children__stem,
+.tree .vertical-children__top,
+.tree .vertical-children__branch {
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.tree .vertical-children__stem::before,
+.tree .vertical-children__top::before,
+.tree .vertical-children__branch::before {
+  content: none;
+}
+
+.tree .vertical-children__stem {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 0.5em;
+  border-left: var(--tree-line-width) solid var(--tree-line-color);
+  margin-left: calc(var(--tree-line-width) / -2);
+}
+
+.tree .vertical-children__list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 calc(var(--tree-ol-rail-x) + var(--tree-ol-branch));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: max-content;
+  max-width: 100%;
+}
+
+.tree .vertical-children__list > li {
+  display: block;
+  list-style: none;
+  width: 100%;
+  padding: 0.25em 0;
+  position: relative;
+  text-align: left;
+}
+
+.tree .vertical-children__list > li::marker {
+  content: "";
+}
+
+.tree .vertical-children__list > li::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--tree-ol-branch) * -1);
+  right: auto;
+  top: -0.25em;
+  bottom: -0.25em;
+  width: 0;
+  height: auto;
+  border-top: none;
+  border-left: var(--tree-line-width) solid var(--tree-line-color);
+}
+
+.tree .vertical-children__list > li:first-child::before {
+  left: calc(var(--tree-ol-branch) * -1);
+  right: auto;
+  top: 0;
+}
+
+.tree .vertical-children__list > li:last-child::before {
+  left: calc(var(--tree-ol-branch) * -1);
+  right: auto;
+  bottom: calc(50% + var(--tree-line-width));
+}
+
+.tree .vertical-children__top {
+  position: absolute;
+  left: var(--tree-ol-rail-x);
+  /* nudge up by 0.5px to ensure overlap with the vertical stem */
+  top: calc(0.5em - 0.5px);
+  right: 50%;
+  height: 0;
+  border-top: var(--tree-line-width) solid var(--tree-line-color);
+}
+
+.tree .vertical-children__branch {
+  position: absolute;
+  left: calc(var(--tree-ol-branch) * -1);
+  top: calc(50% - 0.5px);
+  width: var(--tree-ol-branch);
+  height: 0;
+  border-top: var(--tree-line-width) solid var(--tree-line-color);
+}
+
+.tree .vertical-children__list > li > code,
+.tree .vertical-children__list > li > span {
+  margin: 0;
+}
+
+.tree .vertical-children__list > li > code::before,
+.tree .vertical-children__list > li > span::before {
+  content: none;
+}
