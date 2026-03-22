@@ -98,78 +98,46 @@ export default function Home() {
                           </li>
                           <li>
                             <code>a</code>
-                            <div className="vertical-children">
-                              <span
-                                className="vertical-children__stem"
-                                aria-hidden="true"
-                              />
-                              <span
-                                className="vertical-children__top"
-                                aria-hidden="true"
-                              />
-                              <ol className="vertical-children__list">
-                                <li>
-                                  <span
-                                    className="vertical-children__branch"
-                                    aria-hidden="true"
-                                  />
-                                  <code>a</code>
-                                </li>
-                                <li>
-                                  <span
-                                    className="vertical-children__branch"
-                                    aria-hidden="true"
-                                  />
-                                  <code>bpiojwaegpoijaweg</code>
-                                </li>
-                                <li>
-                                  <span
-                                    className="vertical-children__branch"
-                                    aria-hidden="true"
-                                  />
-                                  <code>c</code>
-                                </li>
-                              </ol>
-                            </div>
+                            <ol className="vertical-children__list">
+                              <li>
+                                <code>a</code>
+                              </li>
+                              <li>
+                                <code>bpiojwaegpoijaweg</code>
+                              </li>
+                              <li>
+                                <code>c</code>
+                              </li>
+                            </ol>
                           </li>
                           <li>
                             <code>a</code>
+
+                            <ol className="vertical-children__list">
+                              <li>
+                                <code>a</code>
+                              </li>
+                              <li>
+                                <code>b</code>
+                              </li>
+                              <li>
+                                <code>c</code>
+                              </li>
+                            </ol>
                           </li>
                           <li>
                             <code>a</code>
-                            <div className="vertical-children">
-                              <span
-                                className="vertical-children__stem"
-                                aria-hidden="true"
-                              />
-                              <span
-                                className="vertical-children__top"
-                                aria-hidden="true"
-                              />
-                              <ol className="vertical-children__list">
-                                <li>
-                                  <span
-                                    className="vertical-children__branch"
-                                    aria-hidden="true"
-                                  />
-                                  <code>a</code>
-                                </li>
-                                <li>
-                                  <span
-                                    className="vertical-children__branch"
-                                    aria-hidden="true"
-                                  />
-                                  <code>b</code>
-                                </li>
-                                <li>
-                                  <span
-                                    className="vertical-children__branch"
-                                    aria-hidden="true"
-                                  />
-                                  <code>c</code>
-                                </li>
-                              </ol>
-                            </div>
+                            <ol className="vertical-children__list">
+                              <li>
+                                <code>a</code>
+                              </li>
+                              <li>
+                                <code>b</code>
+                              </li>
+                              <li>
+                                <code>c</code>
+                              </li>
+                            </ol>
                           </li>
                         </ul>
                       </li>
