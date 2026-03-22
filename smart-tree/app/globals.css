@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Tree / connector defaults - tweak these to change look */
+  --tree-line-color: #666;
+  --tree-line-width: 1px;
+  --tree-node-pad-y: 0.2em;
+  --tree-node-pad-x: 0.5em;
+  --tree-node-margin-x: 0.2em;
+  --tree-node-margin-y: 0.5em;
+  --tree-item-vertical-gap: 0.5em; /* vertical spacing between items */
+  --tree-connector-short: 0.5em; /* short connector segment length */
+  --tree-ol-rail-x: 6px; /* horizontal offset for nested ol rail */
+  --tree-ol-branch: 12px; /* horizontal length for child branch */
+  --tree-vertical-gap: 1em; /* spacing used for main tree margin */
 }
 
 @theme inline {
@@ -26,18 +38,11 @@ body {
 }
 
 .tree {
-  --tree-line-color: #666;
-  --tree-ol-rail-x: 6px;
-  --tree-ol-branch: 12px;
-  --tree-line-width: 1px;
-}
-
-.tree {
   list-style: none;
   margin: 0;
   padding: 0;
   position: relative;
-  margin: 0 0 1em;
+  margin: 0 0 var(--tree-vertical-gap);
   text-align: center;
   display: table;
   ul {
@@ -50,10 +55,10 @@ body {
     &:before {
       border-left: var(--tree-line-width) solid var(--tree-line-color);
       content: "";
-      height: 0.5em;
+      height: var(--tree-connector-short);
       left: 50%;
       position: absolute;
-      top: -0.5em;
+      top: calc(var(--tree-connector-short) * -1);
       width: 0;
     }
   }
@@ -63,7 +68,7 @@ body {
     padding: 0;
     position: relative;
     display: table-cell;
-    padding: 0.5em 0;
+    padding: var(--tree-item-vertical-gap) 0;
     vertical-align: top;
     &:before {
       border-top: var(--tree-line-width) solid var(--tree-line-color);
@@ -89,36 +94,20 @@ body {
     border: var(--tree-line-width) solid var(--tree-line-color);
     border-radius: 0.2em;
     display: inline-block;
-    margin: 0 0.2em 0.5em;
-    padding: 0.2em 0.5em;
+    margin: 0 var(--tree-node-margin-x) var(--tree-node-margin-y);
+    padding: var(--tree-node-pad-y) var(--tree-node-pad-x);
     position: relative;
     &:before {
       border-left: var(--tree-line-width) solid var(--tree-line-color);
       content: "";
-      height: 0.5em;
+      height: var(--tree-connector-short);
       left: 50%;
       position: absolute;
-      top: calc(-0.5em - var(--tree-line-width));
+      top: calc(-1 * (var(--tree-connector-short) + var(--tree-line-width)));
       width: 0;
     }
   }
-  span {
-    border: var(--tree-line-width) solid var(--tree-line-color);
-    border-radius: 0.2em;
-    display: inline-block;
-    margin: 0 0.2em 0.5em;
-    padding: 0.2em 0.5em;
-    position: relative;
-    &:before {
-      border-left: var(--tree-line-width) solid var(--tree-line-color);
-      content: "";
-      height: 0.5em;
-      left: 50%;
-      position: absolute;
-      top: calc(-0.5em - var(--tree-line-width));
-      width: 0;
-    }
-  }
+
   > li {
     margin-top: 0;
     &:before {
@@ -132,17 +121,12 @@ body {
         outline: none;
       }
     }
-    > span {
-      &:before {
-        outline: none;
-      }
-    }
   }
 }
 
-.tree .vertical-children__list {
+.tree ol {
   list-style: none;
-  margin: -0.5em auto 0;
+  margin: calc(var(--tree-item-vertical-gap) * -1) auto 0;
   padding: 0.5em var(--tree-ol-rail-x) 0
     calc(var(--tree-ol-rail-x) + var(--tree-ol-branch));
   position: relative;
@@ -154,7 +138,7 @@ body {
   text-align: left;
 }
 
-.tree li > .vertical-children__list::before {
+.tree li > ol::before {
   content: "";
   position: absolute;
   left: calc(50% - (var(--tree-line-width) / 2));
@@ -164,7 +148,7 @@ body {
   background: var(--tree-line-color);
 }
 
-.tree li > .vertical-children__list::after {
+.tree li > ol::after {
   content: "";
   position: absolute;
   left: var(--tree-ol-rail-x);
@@ -174,7 +158,7 @@ body {
   background: var(--tree-line-color);
 }
 
-.tree .vertical-children__list > li {
+.tree ol > li {
   display: block;
   list-style: none;
   width: 100%;
@@ -183,11 +167,11 @@ body {
   text-align: left;
 }
 
-.tree .vertical-children__list > li::marker {
+.tree ol > li::marker {
   content: "";
 }
 
-.tree .vertical-children__list > li::before {
+.tree ol > li::before {
   content: "";
   position: absolute;
   left: calc(var(--tree-ol-branch) * -1);
@@ -199,19 +183,19 @@ body {
   background: var(--tree-line-color);
 }
 
-.tree .vertical-children__list > li:first-child::before {
+.tree ol > li:first-child::before {
   left: calc(var(--tree-ol-branch) * -1);
   right: auto;
   top: 0;
 }
 
-.tree .vertical-children__list > li:last-child::before {
+.tree ol > li:last-child::before {
   left: calc(var(--tree-ol-branch) * -1);
   right: auto;
   bottom: calc(50%);
 }
 
-.tree .vertical-children__list > li::after {
+.tree ol > li::after {
   position: absolute;
   left: calc(var(--tree-ol-branch) * -1);
   top: calc(50% - 0.5px);
@@ -221,12 +205,10 @@ body {
   content: "";
 }
 
-.tree .vertical-children__list > li > code,
-.tree .vertical-children__list > li > span {
+.tree ol > li > code {
   margin: 0;
 }
 
-.tree .vertical-children__list > li > code::before,
-.tree .vertical-children__list > li > span::before {
+.tree ol > li > code::before {
   content: none;
 }

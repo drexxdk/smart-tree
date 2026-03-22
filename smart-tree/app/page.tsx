@@ -98,7 +98,7 @@ export default function Home() {
                           </li>
                           <li>
                             <code>a</code>
-                            <ol className="vertical-children__list">
+                            <ol>
                               <li>
                                 <code>a</code>
                               </li>
@@ -113,7 +113,7 @@ export default function Home() {
                           <li>
                             <code>a</code>
 
-                            <ol className="vertical-children__list">
+                            <ol>
                               <li>
                                 <code>a</code>
                               </li>
@@ -127,7 +127,7 @@ export default function Home() {
                           </li>
                           <li>
                             <code>a</code>
-                            <ol className="vertical-children__list">
+                            <ol>
                               <li>
                                 <code>a</code>
                               </li>
