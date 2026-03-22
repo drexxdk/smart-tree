@@ -9,6 +9,7 @@
   --tree-node-radius: 0.25em; /* border-radius of <code> node boxes */
 
   --tree-spacer: 6px;
+  --card-line-color: red;
 
   /* Clamped radii so arcs never exceed available space */
   --_r: min(
@@ -77,7 +78,7 @@
   right: 50%;
 }
 .tree code {
-  border: var(--tree-line-width) solid var(--tree-line-color);
+  border: var(--tree-line-width) solid var(--card-line-color);
   border-radius: var(--tree-node-radius);
   display: inline-block;
   position: relative;
