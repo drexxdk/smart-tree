@@ -5,17 +5,13 @@
      Change these to configure the entire tree appearance.   */
   --tree-line-color: #666; /* connector & node border color */
   --tree-line-width: 2px; /* thickness of every connector line & node border */
-  --tree-radius: 6px; /* corner radius for rounded connectors (0 = square) */
+  --tree-radius: 10px; /* corner radius for rounded connectors (0 = square) */
   --tree-node-radius: 0.25em; /* border-radius of <code> node boxes */
 
   --tree-spacer: 6px;
 
   /* Clamped radii so arcs never exceed available space */
   --_r: min(
-    var(--tree-radius),
-    calc(var(--tree-spacer) - var(--tree-line-width))
-  );
-  --_r-ol: min(
     var(--tree-radius),
     calc(var(--tree-spacer) - var(--tree-line-width))
   );
@@ -29,83 +25,7 @@
   display: table;
 
   /* ── Horizontal children (ul) ──────────────────────── */
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    display: table;
-    width: 100%;
-
-    /* Drop from parent node to horizontal bar */
-    &::before {
-      content: "";
-      position: absolute;
-      left: calc(50% - var(--tree-line-width) / 2);
-      top: calc(var(--tree-spacer) * -1);
-      width: var(--tree-line-width);
-      height: var(--tree-spacer);
-      background: var(--tree-line-color);
-    }
-  }
-
-  li {
-    list-style: none;
-    margin: 0;
-    padding-top: calc(var(--tree-spacer) + var(--tree-line-width));
-    position: relative;
-    display: table-cell;
-    vertical-align: top;
-
-    /* Horizontal bar spanning siblings */
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: var(--tree-line-width);
-      background: var(--tree-line-color);
-    }
-    &:first-child::before {
-      left: 50%;
-    }
-    &:last-child::before {
-      right: 50%;
-    }
-    &:only-child::before {
-      /* Keep a tiny centered stub so the parent's drop meets the single child.
-         A zero-length bar caused a visual gap; this draws a line-width square
-         at the center which connects to the vertical drops. */
-      left: calc(50% - var(--tree-line-width) / 2);
-      right: auto;
-      width: var(--tree-line-width);
-      height: var(--tree-line-width);
-      display: block;
-      background: var(--tree-line-color);
-    }
-  }
-
-  code {
-    border: var(--tree-line-width) solid red;
-    border-radius: var(--tree-node-radius);
-    display: inline-block;
-    position: relative;
-    margin-left: calc(var(--tree-spacer) / 2);
-    margin-right: calc(var(--tree-spacer) / 2);
-    margin-bottom: calc(var(--tree-spacer));
-
-    /* Drop from horizontal bar to this node */
-    &::before {
-      content: "";
-      position: absolute;
-      left: calc(50% - var(--tree-line-width) / 2);
-      top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width)));
-      width: var(--tree-line-width);
-      height: var(--tree-spacer);
-      background: var(--tree-line-color);
-    }
-  }
+  /* Horizontal children handled by flat selectors below (keeps CSS valid) */
 
   /* Root node: no connectors above */
   > li::before,
@@ -115,20 +35,75 @@
   }
 }
 
-/* Only-child case: when a parent has exactly one child we remove the
-   horizontal bar but must still draw a continuous vertical drop.
-   Make the child `code::before` extend up to the parent's drop so
-   the two pieces meet with no gap. */
-.tree ul > li:only-child > code::before {
-  top: calc(-1 * var(--tree-spacer));
-  height: calc(var(--tree-spacer) + var(--tree-line-width));
+/* Flat horizontal children rules (plain CSS) */
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: table;
+  width: 100%;
 }
+.tree ul::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - var(--tree-line-width) / 2);
+  top: calc(var(--tree-spacer) * -1);
+  width: var(--tree-line-width);
+  height: var(--tree-spacer);
+  background: var(--tree-line-color);
+}
+.tree li {
+  list-style: none;
+  margin: 0;
+  padding-top: calc(var(--tree-spacer) + var(--tree-line-width));
+  position: relative;
+  display: table-cell;
+  vertical-align: top;
+}
+.tree li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--tree-line-width);
+  background: var(--tree-line-color);
+}
+.tree li:first-child::before {
+  left: 50%;
+}
+.tree li:last-child::before {
+  right: 50%;
+}
+.tree code {
+  border: var(--tree-line-width) solid var(--tree-line-color);
+  border-radius: var(--tree-node-radius);
+  display: inline-block;
+  position: relative;
+  margin-left: calc(var(--tree-spacer) / 2);
+  margin-right: calc(var(--tree-spacer) / 2);
+  margin-bottom: calc(var(--tree-spacer));
+  padding: 10px;
+}
+.tree code::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - var(--tree-line-width) / 2);
+  top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width)));
+  width: var(--tree-line-width);
+  height: var(--tree-spacer);
+  background: var(--tree-line-color);
+}
+
+/* Only-child case handled later to avoid being overridden by
+  the first/last-child rules below. */
 
 /* ── Vertical children (ol) ────────────────────────────── */
 .tree ol {
   list-style: none;
   margin: calc((var(--tree-spacer) * -1)) auto 0;
-  padding: var(--tree-spacer) var(--tree-spacer) 0
+  padding: calc(var(--tree-spacer)) var(--tree-spacer) 0
     calc(var(--tree-spacer) + var(--tree-spacer));
   position: relative;
   display: flex;
@@ -139,33 +114,11 @@
   text-align: left;
 }
 
-/* Drop from parent center to horizontal bar */
-.tree li > ol::before {
-  content: "";
-  position: absolute;
-  left: calc(50% - var(--tree-line-width) / 2);
-  top: 0;
-  width: var(--tree-line-width);
-  height: var(--tree-spacer);
-  background: var(--tree-line-color);
-}
-
-/* Horizontal bar from rail-x to parent center */
-.tree li > ol::after {
-  content: "";
-  position: absolute;
-  left: calc(var(--tree-spacer) - var(--tree-line-width));
-  right: calc(50% - var(--tree-line-width) / 2);
-  top: calc(var(--tree-spacer) - var(--tree-line-width) / 2);
-  height: var(--tree-line-width);
-  background: var(--tree-line-color);
-}
-
 .tree ol > li {
   display: block;
   list-style: none;
   width: 100%;
-  padding: calc(var(--tree-spacer) / 2) 0;
+  /* padding: calc(var(--tree-spacer) / 2) 0; */
   position: relative;
   text-align: left;
 }
@@ -210,68 +163,11 @@
 }
 
 /* ── Rounded connectors ───────────────────────────────────
-   Add .tree--rounded to the root <ul> to enable.
-   All corners are fully controlled by --tree-radius.
-   ─────────────────────────────────────────────────────── */
-
-.tree--rounded {
-  /*
-   * Horizontal layout (ul) rounding
-   *
-   * Rounded corners at bar endpoints:
-   *   · first-child bar start → curves down toward child
-   *   · last-child  bar end   → curves down toward child
-   */
-
-  /* First child: bar's left end curves down toward child.
-     Convert left edge into an L-shape with border, then round. */
-  ul > li:first-child::before {
-    left: calc(50% + (var(--tree-line-width) / 2 * -1));
-    height: calc(var(--_r) + var(--tree-line-width));
-    background: transparent;
-    border-left: var(--tree-line-width) solid var(--tree-line-color);
-    border-top: var(--tree-line-width) solid var(--tree-line-color);
-    border-top-left-radius: var(--_r);
-    box-sizing: border-box;
-  }
-
-  /* Last child: bar's right end curves down toward child */
-  ul > li:last-child::before {
-    right: calc(50% + (var(--tree-line-width) / 2 * -1));
-    height: calc(var(--_r) + var(--tree-line-width));
-    background: transparent;
-    border-right: var(--tree-line-width) solid var(--tree-line-color);
-    border-top: var(--tree-line-width) solid var(--tree-line-color);
-    border-top-right-radius: var(--_r);
-    box-sizing: border-box;
-  }
-
-  /* Only child: just a straight drop, no bar */
-  ul > li:only-child::before {
-    display: none;
-  }
-
-  /* First child's code drop: shorten to not overlap with the rounded bar end */
-  ul > li:first-child > code::before {
-    top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r)));
-    height: calc(var(--tree-spacer) - var(--_r));
-  }
-
-  /* Last child's code drop: same treatment */
-  ul > li:last-child > code::before {
-    top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r)));
-    height: calc(var(--tree-spacer) - var(--_r));
-  }
-
-  /* Middle children: bar is flat, code drop is full height — no changes needed */
-}
-
-/* Rounded-mode only-child: ensure the single-child drop remains continuous
-   (do not apply the first/last-child shortening when there's exactly one child). */
-.tree--rounded ul > li:only-child > code::before {
-  top: calc(-1 * var(--tree-spacer) - (var(--tree-line-width) * 2));
-  height: calc(var(--tree-spacer) + var(--tree-line-width));
-}
+   All rounded-corner rules are flattened and consolidated
+   later in the file to avoid cascade conflicts. */
+/* Only-child (ensure the single-child drop remains continuous):
+  child `code::before` is extended so the parent's vertical drop and
+  the child's drop meet without gaps. */
 
 /*
  * Vertical layout (ol) rounding
@@ -283,11 +179,13 @@
  * The last-child branch curves from the rail into the horizontal branch.
  */
 
-/* Parent drop → right bend into the horizontal bar */
-.tree--rounded li > ol::before {
-  left: calc(50% - var(--_r));
+.tree li > ol::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(50% - var(--_r) - var(--tree-line-width) / 2);
   width: var(--_r);
-  height: calc(var(--tree-spacer));
+  height: calc(var(--tree-spacer) + var(--tree-line-width));
   background: transparent;
   border-right: var(--tree-line-width) solid var(--tree-line-color);
   border-bottom: var(--tree-line-width) solid var(--tree-line-color);
@@ -295,12 +193,15 @@
   box-sizing: border-box;
 }
 
-/* Horizontal bar → left bend curving down into the rail */
-.tree--rounded li > ol::after {
+.tree li > ol::after {
+  content: "";
+  position: absolute;
   left: calc(var(--tree-spacer) - var(--tree-line-width));
-  right: calc(50% + var(--_r));
-  top: calc(var(--tree-spacer) - var(--tree-line-width));
-  height: calc(var(--_r) + var(--tree-line-width));
+  right: calc(50% - var(--_r) / 2);
+  background: var(--tree-line-color);
+  right: calc(50% + (var(--_r) + var(--tree-line-width) / 2));
+  top: calc(var(--tree-spacer));
+  height: calc(var(--tree-spacer) + var(--tree-line-width));
   background: transparent;
   border-top: var(--tree-line-width) solid var(--tree-line-color);
   border-left: var(--tree-line-width) solid var(--tree-line-color);
@@ -308,32 +209,72 @@
   box-sizing: border-box;
 }
 
-.tree--rounded ol > li:only-child::before {
+.tree ol > li:only-child::before {
   height: auto;
 }
 
-/* First child (ol): rail starts at the arc exit */
-.tree--rounded ol > li:first-child::before {
-  top: calc(var(--tree-radius) - var(--tree-line-width));
+.tree ol > li:first-child::before {
+  top: calc(var(--_r));
   left: calc((var(--tree-spacer) * -1) - var(--tree-line-width));
 }
 
-/* Last child (ol): rail stops above the branch arc */
-.tree--rounded ol > li:last-child::before {
-  bottom: calc(50% + var(--_r-ol));
+.tree ol > li:last-child::before {
+  bottom: calc(50% + var(--_r));
 }
 
 /* Non-last child branches: unchanged (straight) */
 
-/* Last child (ol): rail arc curving into the branch */
-.tree--rounded ol > li:last-child::after {
+.tree ol > li:last-child::after {
   left: calc(var(--tree-spacer) * -1 - var(--tree-line-width));
-  top: calc(50% - var(--_r-ol) - var(--tree-line-width));
+  top: calc(50% - var(--_r) - var(--tree-line-width));
   width: calc(var(--tree-spacer) + var(--tree-line-width));
-  height: calc(var(--_r-ol) + var(--tree-line-width));
+  height: calc(var(--_r) + var(--tree-line-width));
   background: transparent;
   border-left: var(--tree-line-width) solid var(--tree-line-color);
   border-bottom: var(--tree-line-width) solid var(--tree-line-color);
-  border-bottom-left-radius: var(--_r-ol);
+  border-bottom-left-radius: var(--_r);
   box-sizing: border-box;
+}
+
+/* Flattened horizontal rounded rules (apply by default to `.tree`) */
+.tree ul > li:first-child::before {
+  left: calc(50% + (var(--tree-line-width) / 2 * -1));
+  height: calc(var(--_r) + var(--tree-line-width));
+  background: transparent;
+  border-left: var(--tree-line-width) solid var(--tree-line-color);
+  border-top: var(--tree-line-width) solid var(--tree-line-color);
+  border-top-left-radius: var(--_r);
+  box-sizing: border-box;
+}
+
+.tree ul > li:last-child::before {
+  right: calc(50% + (var(--tree-line-width) / 2 * -1));
+  height: calc(var(--_r) + var(--tree-line-width));
+  background: transparent;
+  border-right: var(--tree-line-width) solid var(--tree-line-color);
+  border-top: var(--tree-line-width) solid var(--tree-line-color);
+  border-top-right-radius: var(--_r);
+  box-sizing: border-box;
+}
+
+/* Only-child stub hidden — child's vertical drop meets parent drop */
+.tree ul > li:only-child::before {
+  display: none;
+}
+
+.tree ul > li:first-child > code::before {
+  top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r)));
+  height: calc(var(--tree-spacer) - var(--_r));
+}
+
+.tree ul > li:last-child > code::before {
+  top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r)));
+  height: calc(var(--tree-spacer) - var(--_r));
+}
+
+/* Only-child: ensure child's vertical drop extends to parent's drop
+   (placed after first/last rules so it wins in cascade). */
+.tree ul > li:only-child > code::before {
+  top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) * 2));
+  height: calc(var(--tree-spacer) + var(--tree-line-width));
 }
