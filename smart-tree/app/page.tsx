@@ -1,9 +1,11 @@
 export default function Home() {
   return (
-    <div>
+    <div className="tree-demo">
       <figure>
-        <figcaption>Example DOM structure diagram</figcaption>
-        <ul className="tree">
+        <figcaption>
+          Example DOM structure diagram with rounded connectors
+        </figcaption>
+        <ul className="tree tree--rounded">
           <li>
             <code>html</code>
             <ul>

@@ -3,18 +3,22 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  /* Tree / connector defaults - tweak these to change look */
-  --tree-line-color: #666;
-  --tree-line-width: 1px;
+
+  /* ── Tree variables ──────────────────────────────────────
+     Change these to configure the entire tree appearance.   */
+  --tree-line-color: #666; /* connector & node border color */
+  --tree-line-width: 2px; /* thickness of every connector line & node border */
+  --tree-radius: 6px; /* corner radius for rounded connectors (0 = square) */
+  --tree-node-radius: 0.2em; /* border-radius of <code> node boxes */
   --tree-node-pad-y: 0.2em;
   --tree-node-pad-x: 0.5em;
   --tree-node-margin-x: 0.2em;
   --tree-node-margin-y: 0.5em;
-  --tree-item-vertical-gap: 0.5em; /* vertical spacing between items */
-  --tree-connector-short: 0.5em; /* short connector segment length */
-  --tree-ol-rail-x: 6px; /* horizontal offset for nested ol rail */
-  --tree-ol-branch: 12px; /* horizontal length for child branch */
-  --tree-vertical-gap: 1em; /* spacing used for main tree margin */
+  --tree-gap: 0.5em; /* vertical gap between sibling <li> rows */
+  --tree-connector: 0.5em; /* length of the short drop connector */
+  --tree-ol-rail-x: 6px; /* x-offset of the vertical rail in ol layout */
+  --tree-ol-branch: 12px; /* horizontal branch length in ol layout */
+  --tree-vertical-gap: 1em; /* bottom margin of the tree root */
 }
 
 @theme inline {
@@ -37,14 +41,59 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.tree-demo {
+  min-height: 100vh;
+  padding: 2rem;
+  /* background:
+    radial-gradient(
+      circle at top left,
+      rgb(15 118 110 / 0.14),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgb(234 88 12 / 0.16),
+      transparent 28%
+    ),
+    linear-gradient(160deg, #f8fafc 0%, #eef2ff 42%, #fff7ed 100%); */
+}
+
+/* .tree-demo figure {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.72);
+  box-shadow: 0 18px 50px rgb(15 23 42 / 0.12);
+  backdrop-filter: blur(18px);
+} */
+
+.tree-demo figcaption {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
 .tree {
+  /* Clamped radii so arcs never exceed available space */
+  --_r: min(
+    var(--tree-radius),
+    calc(var(--tree-connector) - var(--tree-line-width))
+  );
+  --_r-ol: min(
+    var(--tree-radius),
+    calc(var(--tree-ol-branch) - var(--tree-line-width))
+  );
+
   list-style: none;
-  margin: 0;
+  margin: 0 0 var(--tree-vertical-gap);
   padding: 0;
   position: relative;
-  margin: 0 0 var(--tree-vertical-gap);
   text-align: center;
   display: table;
+
+  /* ── Horizontal children (ul) ──────────────────────── */
   ul {
     list-style: none;
     margin: 0;
@@ -52,82 +101,81 @@ body {
     position: relative;
     display: table;
     width: 100%;
-    &:before {
-      border-left: var(--tree-line-width) solid var(--tree-line-color);
+
+    /* Drop from parent node to horizontal bar */
+    &::before {
       content: "";
-      height: var(--tree-connector-short);
-      left: 50%;
       position: absolute;
-      top: calc(var(--tree-connector-short) * -1);
-      width: 0;
+      left: calc(50% - var(--tree-line-width) / 2);
+      top: calc(var(--tree-connector) * -1);
+      width: var(--tree-line-width);
+      height: var(--tree-connector);
+      background: var(--tree-line-color);
     }
   }
+
   li {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: var(--tree-gap) 0;
     position: relative;
     display: table-cell;
-    padding: var(--tree-item-vertical-gap) 0;
     vertical-align: top;
-    &:before {
-      border-top: var(--tree-line-width) solid var(--tree-line-color);
+
+    /* Horizontal bar spanning siblings */
+    &::before {
       content: "";
-      left: 0;
       position: absolute;
+      left: 0;
       right: 0;
       top: 0;
-      height: 0;
+      height: var(--tree-line-width);
+      background: var(--tree-line-color);
     }
-    &:first-child {
-      &:before {
-        left: 50%;
-      }
+    &:first-child::before {
+      left: 50%;
     }
-    &:last-child {
-      &:before {
-        right: 50%;
-      }
+    &:last-child::before {
+      right: 50%;
+    }
+    &:only-child::before {
+      display: none;
     }
   }
+
   code {
     border: var(--tree-line-width) solid var(--tree-line-color);
-    border-radius: 0.2em;
+    border-radius: var(--tree-node-radius);
     display: inline-block;
     margin: 0 var(--tree-node-margin-x) var(--tree-node-margin-y);
     padding: var(--tree-node-pad-y) var(--tree-node-pad-x);
     position: relative;
-    &:before {
-      border-left: var(--tree-line-width) solid var(--tree-line-color);
+
+    /* Drop from horizontal bar to this node */
+    &::before {
       content: "";
-      height: var(--tree-connector-short);
-      left: 50%;
       position: absolute;
-      top: calc(-1 * (var(--tree-connector-short) + var(--tree-line-width)));
-      width: 0;
+      left: calc(50% - var(--tree-line-width) / 2);
+      top: calc(-1 * (var(--tree-connector) + var(--tree-line-width)));
+      width: var(--tree-line-width);
+      height: var(--tree-connector);
+      background: var(--tree-line-color);
     }
   }
 
-  > li {
-    margin-top: 0;
-    &:before {
-      outline: none;
-    }
-    &:after {
-      outline: none;
-    }
-    > code {
-      &:before {
-        outline: none;
-      }
-    }
+  /* Root node: no connectors above */
+  > li::before,
+  > li::after,
+  > li > code::before {
+    display: none;
   }
 }
 
+/* ── Vertical children (ol) ────────────────────────────── */
 .tree ol {
   list-style: none;
-  margin: calc(var(--tree-item-vertical-gap) * -1) auto 0;
-  padding: 0.5em var(--tree-ol-rail-x) 0
+  margin: calc(var(--tree-gap) * -1) auto 0;
+  padding: var(--tree-connector) var(--tree-ol-rail-x) 0
     calc(var(--tree-ol-rail-x) + var(--tree-ol-branch));
   position: relative;
   display: flex;
@@ -138,22 +186,24 @@ body {
   text-align: left;
 }
 
+/* Drop from parent center to horizontal bar */
 .tree li > ol::before {
   content: "";
   position: absolute;
-  left: calc(50% - (var(--tree-line-width) / 2));
+  left: calc(50% - var(--tree-line-width) / 2);
   top: 0;
   width: var(--tree-line-width);
-  height: 0.5em;
+  height: var(--tree-connector);
   background: var(--tree-line-color);
 }
 
+/* Horizontal bar from rail-x to parent center */
 .tree li > ol::after {
   content: "";
   position: absolute;
-  left: var(--tree-ol-rail-x);
-  right: calc(50% - (var(--tree-line-width) / 2));
-  top: calc(0.5em - 0.5px);
+  left: calc(var(--tree-ol-rail-x) - var(--tree-line-width));
+  right: calc(50% - var(--tree-line-width) / 2);
+  top: calc(var(--tree-connector) - var(--tree-line-width) / 2);
   height: var(--tree-line-width);
   background: var(--tree-line-color);
 }
@@ -162,53 +212,170 @@ body {
   display: block;
   list-style: none;
   width: 100%;
-  padding: 0.5em 0;
+  padding: calc(var(--tree-gap) / 2) 0;
   position: relative;
   text-align: left;
 }
-
 .tree ol > li::marker {
   content: "";
 }
 
+/* Vertical shared rail */
 .tree ol > li::before {
   content: "";
   position: absolute;
-  left: calc(var(--tree-ol-branch) * -1);
-  right: auto;
-  top: -0.25em;
-  bottom: -0.25em;
+  left: calc(var(--tree-ol-branch) * -1 - var(--tree-line-width));
+  top: calc(var(--tree-gap) / -2);
+  bottom: calc(var(--tree-gap) / -2);
   width: var(--tree-line-width);
   height: auto;
   background: var(--tree-line-color);
 }
-
 .tree ol > li:first-child::before {
-  left: calc(var(--tree-ol-branch) * -1);
-  right: auto;
   top: 0;
 }
-
 .tree ol > li:last-child::before {
-  left: calc(var(--tree-ol-branch) * -1);
-  right: auto;
-  bottom: calc(50%);
+  bottom: 50%;
 }
 
+/* Horizontal branch from rail to each child */
 .tree ol > li::after {
+  content: "";
   position: absolute;
-  left: calc(var(--tree-ol-branch) * -1);
-  top: calc(50% - 0.5px);
-  width: var(--tree-ol-branch);
+  left: calc(var(--tree-ol-branch) * -1 - var(--tree-line-width));
+  top: calc(50% - var(--tree-line-width) / 2);
+  width: calc(var(--tree-ol-branch) + var(--tree-line-width));
   height: var(--tree-line-width);
   background: var(--tree-line-color);
-  content: "";
 }
 
 .tree ol > li > code {
   margin: 0;
 }
-
 .tree ol > li > code::before {
   content: none;
+}
+
+/* ── Rounded connectors ───────────────────────────────────
+   Add .tree--rounded to the root <ul> to enable.
+   All corners are fully controlled by --tree-radius.
+   ─────────────────────────────────────────────────────── */
+
+.tree--rounded {
+  /*
+   * Horizontal layout (ul) rounding
+   *
+   * Rounded corners at bar endpoints:
+   *   · first-child bar start → curves down toward child
+   *   · last-child  bar end   → curves down toward child
+   */
+
+  /* First child: bar's left end curves down toward child.
+     Convert left edge into an L-shape with border, then round. */
+  ul > li:first-child::before {
+    left: calc(50% + (var(--tree-line-width) / 2 * -1));
+    height: calc(var(--_r) + var(--tree-line-width));
+    background: transparent;
+    border-left: var(--tree-line-width) solid var(--tree-line-color);
+    border-top: var(--tree-line-width) solid var(--tree-line-color);
+    border-top-left-radius: var(--_r);
+    box-sizing: border-box;
+  }
+
+  /* Last child: bar's right end curves down toward child */
+  ul > li:last-child::before {
+    right: calc(50% + (var(--tree-line-width) / 2 * -1));
+    /* right: calc(50% + - (1px)); */
+    height: calc(var(--_r) + var(--tree-line-width));
+    background: transparent;
+    border-right: var(--tree-line-width) solid var(--tree-line-color);
+    border-top: var(--tree-line-width) solid var(--tree-line-color);
+    border-top-right-radius: var(--_r);
+    box-sizing: border-box;
+  }
+
+  /* Only child: just a straight drop, no bar */
+  ul > li:only-child::before {
+    display: none;
+  }
+
+  /* First child's code drop: shorten to not overlap with the rounded bar end */
+  ul > li:first-child > code::before {
+    top: calc(
+      -1 * (var(--tree-connector) + var(--tree-line-width) - var(--_r))
+    );
+    height: calc(var(--tree-connector) - var(--_r));
+  }
+
+  /* Last child's code drop: same treatment */
+  ul > li:last-child > code::before {
+    top: calc(
+      -1 * (var(--tree-connector) + var(--tree-line-width) - var(--_r))
+    );
+    height: calc(var(--tree-connector) - var(--_r));
+  }
+
+  /* Middle children: bar is flat, code drop is full height — no changes needed */
+}
+
+/*
+ * Vertical layout (ol) rounding
+ *
+ * The parent → rail S-curve has two 90° bends:
+ *   ::before — drop from parent center + arc curving left
+ *   ::after  — horizontal bar + arc curving down into the rail
+ *
+ * The last-child branch curves from the rail into the horizontal branch.
+ */
+
+/* Parent drop → right bend into the horizontal bar */
+.tree--rounded li > ol::before {
+  left: calc(50% - var(--_r));
+  width: var(--_r);
+  height: var(--tree-connector);
+  background: transparent;
+  border-right: var(--tree-line-width) solid var(--tree-line-color);
+  border-bottom: var(--tree-line-width) solid var(--tree-line-color);
+  border-bottom-right-radius: var(--_r);
+  box-sizing: border-box;
+}
+
+/* Horizontal bar → left bend curving down into the rail */
+.tree--rounded li > ol::after {
+  left: calc(var(--tree-ol-rail-x) - var(--tree-line-width));
+  right: calc(50% + var(--_r));
+  top: calc(var(--tree-connector) - var(--tree-line-width));
+  height: calc(var(--_r) + var(--tree-line-width));
+  background: transparent;
+  border-top: var(--tree-line-width) solid var(--tree-line-color);
+  border-left: var(--tree-line-width) solid var(--tree-line-color);
+  border-top-left-radius: var(--_r);
+  box-sizing: border-box;
+}
+
+/* First child (ol): rail starts at the arc exit */
+.tree--rounded ol > li:first-child::before {
+  top: calc(var(--tree-connector) - var(--tree-line-width));
+
+  left: calc((var(--tree-ol-branch) * -1) - var(--tree-line-width));
+}
+
+/* Last child (ol): rail stops above the branch arc */
+.tree--rounded ol > li:last-child::before {
+  bottom: calc(50% + var(--_r-ol));
+}
+
+/* Non-last child branches: unchanged (straight) */
+
+/* Last child (ol): rail arc curving into the branch */
+.tree--rounded ol > li:last-child::after {
+  left: calc(var(--tree-ol-branch) * -1 - var(--tree-line-width));
+  top: calc(50% - var(--_r-ol) - var(--tree-line-width));
+  width: calc(var(--tree-ol-branch) + var(--tree-line-width));
+  height: calc(var(--_r-ol) + var(--tree-line-width));
+  background: transparent;
+  border-left: var(--tree-line-width) solid var(--tree-line-color);
+  border-bottom: var(--tree-line-width) solid var(--tree-line-color);
+  border-bottom-left-radius: var(--_r-ol);
+  box-sizing: border-box;
 }
