@@ -1,93 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-
   /* ── Tree variables ──────────────────────────────────────
      Change these to configure the entire tree appearance.   */
   --tree-line-color: #666; /* connector & node border color */
   --tree-line-width: 2px; /* thickness of every connector line & node border */
   --tree-radius: 6px; /* corner radius for rounded connectors (0 = square) */
-  --tree-node-radius: 0.2em; /* border-radius of <code> node boxes */
-  --tree-node-pad-y: 0.2em;
-  --tree-node-pad-x: 0.5em;
-  --tree-node-margin-x: 0.2em;
-  --tree-node-margin-y: 0.5em;
-  --tree-gap: 0.5em; /* vertical gap between sibling <li> rows */
-  --tree-connector: 0.5em; /* length of the short drop connector */
-  --tree-ol-rail-x: 6px; /* x-offset of the vertical rail in ol layout */
-  --tree-ol-branch: 12px; /* horizontal branch length in ol layout */
-  --tree-vertical-gap: 1em; /* bottom margin of the tree root */
-}
+  --tree-node-radius: 0.25em; /* border-radius of <code> node boxes */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --tree-spacer: 6px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.tree-demo {
-  min-height: 100vh;
-  padding: 2rem;
-  /* background:
-    radial-gradient(
-      circle at top left,
-      rgb(15 118 110 / 0.14),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at top right,
-      rgb(234 88 12 / 0.16),
-      transparent 28%
-    ),
-    linear-gradient(160deg, #f8fafc 0%, #eef2ff 42%, #fff7ed 100%); */
-}
-
-/* .tree-demo figure {
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 1.5rem;
-  border-radius: 1.25rem;
-  background: rgb(255 255 255 / 0.72);
-  box-shadow: 0 18px 50px rgb(15 23 42 / 0.12);
-  backdrop-filter: blur(18px);
-} */
-
-.tree-demo figcaption {
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-}
-
-.tree {
   /* Clamped radii so arcs never exceed available space */
   --_r: min(
     var(--tree-radius),
-    calc(var(--tree-connector) - var(--tree-line-width))
+    calc(var(--tree-spacer) - var(--tree-line-width))
   );
   --_r-ol: min(
     var(--tree-radius),
-    calc(var(--tree-ol-branch) - var(--tree-line-width))
+    calc(var(--tree-spacer) - var(--tree-line-width))
   );
+}
 
+.tree {
   list-style: none;
-  margin: 0 0 var(--tree-vertical-gap);
   padding: 0;
   position: relative;
   text-align: center;
@@ -107,9 +42,9 @@ body {
       content: "";
       position: absolute;
       left: calc(50% - var(--tree-line-width) / 2);
-      top: calc(var(--tree-connector) * -1);
+      top: calc(var(--tree-spacer) * -1);
       width: var(--tree-line-width);
-      height: var(--tree-connector);
+      height: var(--tree-spacer);
       background: var(--tree-line-color);
     }
   }
@@ -117,7 +52,7 @@ body {
   li {
     list-style: none;
     margin: 0;
-    padding: var(--tree-gap) 0;
+    padding-top: calc(var(--tree-spacer) + var(--tree-line-width));
     position: relative;
     display: table-cell;
     vertical-align: top;
@@ -139,26 +74,35 @@ body {
       right: 50%;
     }
     &:only-child::before {
-      display: none;
+      /* Keep a tiny centered stub so the parent's drop meets the single child.
+         A zero-length bar caused a visual gap; this draws a line-width square
+         at the center which connects to the vertical drops. */
+      left: calc(50% - var(--tree-line-width) / 2);
+      right: auto;
+      width: var(--tree-line-width);
+      height: var(--tree-line-width);
+      display: block;
+      background: var(--tree-line-color);
     }
   }
 
   code {
-    border: var(--tree-line-width) solid var(--tree-line-color);
+    border: var(--tree-line-width) solid red;
     border-radius: var(--tree-node-radius);
     display: inline-block;
-    margin: 0 var(--tree-node-margin-x) var(--tree-node-margin-y);
-    padding: var(--tree-node-pad-y) var(--tree-node-pad-x);
     position: relative;
+    margin-left: calc(var(--tree-spacer) / 2);
+    margin-right: calc(var(--tree-spacer) / 2);
+    margin-bottom: calc(var(--tree-spacer));
 
     /* Drop from horizontal bar to this node */
     &::before {
       content: "";
       position: absolute;
       left: calc(50% - var(--tree-line-width) / 2);
-      top: calc(-1 * (var(--tree-connector) + var(--tree-line-width)));
+      top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width)));
       width: var(--tree-line-width);
-      height: var(--tree-connector);
+      height: var(--tree-spacer);
       background: var(--tree-line-color);
     }
   }
@@ -171,12 +115,21 @@ body {
   }
 }
 
+/* Only-child case: when a parent has exactly one child we remove the
+   horizontal bar but must still draw a continuous vertical drop.
+   Make the child `code::before` extend up to the parent's drop so
+   the two pieces meet with no gap. */
+.tree ul > li:only-child > code::before {
+  top: calc(-1 * var(--tree-spacer));
+  height: calc(var(--tree-spacer) + var(--tree-line-width));
+}
+
 /* ── Vertical children (ol) ────────────────────────────── */
 .tree ol {
   list-style: none;
-  margin: calc(var(--tree-gap) * -1) auto 0;
-  padding: var(--tree-connector) var(--tree-ol-rail-x) 0
-    calc(var(--tree-ol-rail-x) + var(--tree-ol-branch));
+  margin: calc((var(--tree-spacer) * -1)) auto 0;
+  padding: var(--tree-spacer) var(--tree-spacer) 0
+    calc(var(--tree-spacer) + var(--tree-spacer));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -193,7 +146,7 @@ body {
   left: calc(50% - var(--tree-line-width) / 2);
   top: 0;
   width: var(--tree-line-width);
-  height: var(--tree-connector);
+  height: var(--tree-spacer);
   background: var(--tree-line-color);
 }
 
@@ -201,9 +154,9 @@ body {
 .tree li > ol::after {
   content: "";
   position: absolute;
-  left: calc(var(--tree-ol-rail-x) - var(--tree-line-width));
+  left: calc(var(--tree-spacer) - var(--tree-line-width));
   right: calc(50% - var(--tree-line-width) / 2);
-  top: calc(var(--tree-connector) - var(--tree-line-width) / 2);
+  top: calc(var(--tree-spacer) - var(--tree-line-width) / 2);
   height: var(--tree-line-width);
   background: var(--tree-line-color);
 }
@@ -212,7 +165,7 @@ body {
   display: block;
   list-style: none;
   width: 100%;
-  padding: calc(var(--tree-gap) / 2) 0;
+  padding: calc(var(--tree-spacer) / 2) 0;
   position: relative;
   text-align: left;
 }
@@ -224,9 +177,9 @@ body {
 .tree ol > li::before {
   content: "";
   position: absolute;
-  left: calc(var(--tree-ol-branch) * -1 - var(--tree-line-width));
-  top: calc(var(--tree-gap) / -2);
-  bottom: calc(var(--tree-gap) / -2);
+  left: calc(var(--tree-spacer) * -1 - var(--tree-line-width));
+  top: calc(var(--tree-spacer) / -2);
+  bottom: calc(var(--tree-spacer) / -2);
   width: var(--tree-line-width);
   height: auto;
   background: var(--tree-line-color);
@@ -242,9 +195,9 @@ body {
 .tree ol > li::after {
   content: "";
   position: absolute;
-  left: calc(var(--tree-ol-branch) * -1 - var(--tree-line-width));
+  left: calc(var(--tree-spacer) * -1 - var(--tree-line-width));
   top: calc(50% - var(--tree-line-width) / 2);
-  width: calc(var(--tree-ol-branch) + var(--tree-line-width));
+  width: calc(var(--tree-spacer) + var(--tree-line-width));
   height: var(--tree-line-width);
   background: var(--tree-line-color);
 }
@@ -285,7 +238,6 @@ body {
   /* Last child: bar's right end curves down toward child */
   ul > li:last-child::before {
     right: calc(50% + (var(--tree-line-width) / 2 * -1));
-    /* right: calc(50% + - (1px)); */
     height: calc(var(--_r) + var(--tree-line-width));
     background: transparent;
     border-right: var(--tree-line-width) solid var(--tree-line-color);
@@ -301,21 +253,24 @@ body {
 
   /* First child's code drop: shorten to not overlap with the rounded bar end */
   ul > li:first-child > code::before {
-    top: calc(
-      -1 * (var(--tree-connector) + var(--tree-line-width) - var(--_r))
-    );
-    height: calc(var(--tree-connector) - var(--_r));
+    top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r)));
+    height: calc(var(--tree-spacer) - var(--_r));
   }
 
   /* Last child's code drop: same treatment */
   ul > li:last-child > code::before {
-    top: calc(
-      -1 * (var(--tree-connector) + var(--tree-line-width) - var(--_r))
-    );
-    height: calc(var(--tree-connector) - var(--_r));
+    top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r)));
+    height: calc(var(--tree-spacer) - var(--_r));
   }
 
   /* Middle children: bar is flat, code drop is full height — no changes needed */
+}
+
+/* Rounded-mode only-child: ensure the single-child drop remains continuous
+   (do not apply the first/last-child shortening when there's exactly one child). */
+.tree--rounded ul > li:only-child > code::before {
+  top: calc(-1 * var(--tree-spacer) - (var(--tree-line-width) * 2));
+  height: calc(var(--tree-spacer) + var(--tree-line-width));
 }
 
 /*
@@ -332,7 +287,7 @@ body {
 .tree--rounded li > ol::before {
   left: calc(50% - var(--_r));
   width: var(--_r);
-  height: var(--tree-connector);
+  height: calc(var(--tree-spacer));
   background: transparent;
   border-right: var(--tree-line-width) solid var(--tree-line-color);
   border-bottom: var(--tree-line-width) solid var(--tree-line-color);
@@ -342,9 +297,9 @@ body {
 
 /* Horizontal bar → left bend curving down into the rail */
 .tree--rounded li > ol::after {
-  left: calc(var(--tree-ol-rail-x) - var(--tree-line-width));
+  left: calc(var(--tree-spacer) - var(--tree-line-width));
   right: calc(50% + var(--_r));
-  top: calc(var(--tree-connector) - var(--tree-line-width));
+  top: calc(var(--tree-spacer) - var(--tree-line-width));
   height: calc(var(--_r) + var(--tree-line-width));
   background: transparent;
   border-top: var(--tree-line-width) solid var(--tree-line-color);
@@ -353,11 +308,14 @@ body {
   box-sizing: border-box;
 }
 
+.tree--rounded ol > li:only-child::before {
+  height: auto;
+}
+
 /* First child (ol): rail starts at the arc exit */
 .tree--rounded ol > li:first-child::before {
-  top: calc(var(--tree-connector) - var(--tree-line-width));
-
-  left: calc((var(--tree-ol-branch) * -1) - var(--tree-line-width));
+  top: calc(var(--tree-radius) - var(--tree-line-width));
+  left: calc((var(--tree-spacer) * -1) - var(--tree-line-width));
 }
 
 /* Last child (ol): rail stops above the branch arc */
@@ -369,9 +327,9 @@ body {
 
 /* Last child (ol): rail arc curving into the branch */
 .tree--rounded ol > li:last-child::after {
-  left: calc(var(--tree-ol-branch) * -1 - var(--tree-line-width));
+  left: calc(var(--tree-spacer) * -1 - var(--tree-line-width));
   top: calc(50% - var(--_r-ol) - var(--tree-line-width));
-  width: calc(var(--tree-ol-branch) + var(--tree-line-width));
+  width: calc(var(--tree-spacer) + var(--tree-line-width));
   height: calc(var(--_r-ol) + var(--tree-line-width));
   background: transparent;
   border-left: var(--tree-line-width) solid var(--tree-line-color);

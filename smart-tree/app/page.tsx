@@ -102,13 +102,7 @@ export default function Home() {
                             <code>a</code>
                             <ol>
                               <li>
-                                <code>a</code>
-                              </li>
-                              <li>
                                 <code>bpiojwaegpoijaweg</code>
-                              </li>
-                              <li>
-                                <code>c</code>
                               </li>
                             </ol>
                           </li>
