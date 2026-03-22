@@ -197,7 +197,7 @@
       }
 
       > ul {
-        margin-top: calc(var(--tree-spacer) * -1);
+        margin-top: var(--tree-spacer);
         margin-bottom: calc(var(--tree-spacer) * -1);
         margin-left: calc(var(--tree-spacer) * -1 / 2);
         margin-right: calc(var(--tree-spacer) * -1);
@@ -230,7 +230,6 @@
           bottom: calc(50% + var(--_r) - var(--tree-line-width));
         }
         & > code::before {
-          // left: calc(var(--tree-spacer) * -1 - var(--tree-line-width));
           top: calc(50% - var(--_r) - var(--tree-line-width));
           width: calc(var(--tree-spacer) + var(--tree-line-width));
           height: calc(var(--_r) + var(--tree-line-width));
