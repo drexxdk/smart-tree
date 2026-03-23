@@ -16,21 +16,123 @@
     calc(var(--tree-spacer) - var(--tree-line-width))
   );
 
+  /* Root node */
   > ul {
     display: table;
-    perspective: 1px;
 
-    /* Root node: hide connectors above the root li elements */
-    > li {
-      &::before,
-      &::after,
-      > code::before {
-        display: none;
+    li {
+      code {
+        border: var(--tree-line-width) solid var(--card-line-color);
+        border-radius: var(--tree-node-radius);
+        display: inline-block;
+        position: relative;
+        padding: 10px;
+        background-color: white;
+        margin-left: calc(var(--tree-spacer) / 2);
+        margin-right: calc(var(--tree-spacer) / 2);
+        margin-bottom: calc(var(--tree-spacer));
       }
     }
 
     ul {
       width: 100%;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: calc(50% - var(--tree-line-width) / 2);
+        top: calc(var(--tree-spacer) * -1);
+        // width: var(--tree-line-width);
+        height: var(--tree-spacer);
+        // background: var(--tree-line-color);
+        // background-color: red;
+        border-left: var(--tree-line-width) solid var(--tree-line-color);
+      }
+
+      > li {
+        list-style: none;
+        margin: 0;
+        padding-top: calc(var(--tree-spacer) + var(--tree-line-width));
+        position: relative;
+        display: table-cell;
+        vertical-align: top;
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          border-top: var(--tree-line-width) solid var(--tree-line-color);
+        }
+
+        > code {
+          &::before {
+            content: "";
+            position: absolute;
+            left: calc(50% - var(--tree-line-width) / 2);
+            top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width)));
+            width: var(--tree-line-width);
+            height: var(--tree-spacer);
+            background: var(--tree-line-color);
+          }
+        }
+
+        /* first/last child tweaks (rounded arcs) */
+        &:not(:only-child):first-child {
+          > code::before {
+            top: calc(
+              -1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r))
+            );
+            height: calc(var(--tree-spacer) - var(--_r));
+          }
+
+          &::before {
+            left: calc(50% + (var(--tree-line-width) / 2 * -1));
+            height: calc(var(--_r) + var(--tree-line-width));
+            background: transparent;
+            border-left: var(--tree-line-width) solid var(--tree-line-color);
+            border-top: var(--tree-line-width) solid var(--tree-line-color);
+            border-top-left-radius: var(--_r);
+            box-sizing: border-box;
+          }
+        }
+
+        &:not(:only-child):last-child {
+          > code::before {
+            top: calc(
+              -1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r))
+            );
+            height: calc(var(--tree-spacer) - var(--_r));
+          }
+
+          &::before {
+            right: calc(50% + (var(--tree-line-width) / 2 * -1));
+            height: calc(var(--_r) + var(--tree-line-width));
+            background: transparent;
+            border-right: var(--tree-line-width) solid var(--tree-line-color);
+            border-top: var(--tree-line-width) solid var(--tree-line-color);
+            border-top-right-radius: var(--_r);
+            box-sizing: border-box;
+          }
+        }
+
+        /* only-child case: hide stub and extend child's drop */
+        &:only-child {
+          &::before {
+            display: none;
+          }
+
+          > code {
+            &::before {
+              top: calc(
+                -1 * (var(--tree-spacer) + (var(--tree-line-width) * 2))
+              );
+              height: calc(var(--tree-spacer) + (var(--tree-line-width)));
+            }
+          }
+        }
+      }
     }
   }
 
@@ -39,118 +141,10 @@
     position: relative;
     display: table;
     text-align: center;
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: calc(50% - var(--tree-line-width) / 2);
-      top: calc(var(--tree-spacer) * -1);
-      width: var(--tree-line-width);
-      height: var(--tree-spacer);
-      background: var(--tree-line-color);
-    }
-
-    > li {
-      list-style: none;
-      margin: 0;
-      padding-top: calc(var(--tree-spacer) + var(--tree-line-width));
-      position: relative;
-      display: table-cell;
-      vertical-align: top;
-
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        height: var(--tree-line-width);
-        background: var(--tree-line-color);
-      }
-
-      > code {
-        margin-left: calc(var(--tree-spacer) / 2);
-        margin-right: calc(var(--tree-spacer) / 2);
-        margin-bottom: calc(var(--tree-spacer));
-
-        &::before {
-          content: "";
-          position: absolute;
-          left: calc(50% - var(--tree-line-width) / 2);
-          top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width)));
-          width: var(--tree-line-width);
-          height: var(--tree-spacer);
-          background: var(--tree-line-color);
-        }
-      }
-
-      code {
-        border: var(--tree-line-width) solid var(--card-line-color);
-        border-radius: var(--tree-node-radius);
-        display: inline-block;
-        position: relative;
-        padding: 10px;
-        background-color: white;
-      }
-
-      /* first/last child tweaks (rounded arcs) */
-      &:not(:only-child):first-child {
-        > code::before {
-          top: calc(
-            -1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r))
-          );
-          height: calc(var(--tree-spacer) - var(--_r));
-        }
-
-        &::before {
-          left: calc(50% + (var(--tree-line-width) / 2 * -1));
-          height: calc(var(--_r) + var(--tree-line-width));
-          background: transparent;
-          border-left: var(--tree-line-width) solid var(--tree-line-color);
-          border-top: var(--tree-line-width) solid var(--tree-line-color);
-          border-top-left-radius: var(--_r);
-          box-sizing: border-box;
-        }
-      }
-
-      &:not(:only-child):last-child {
-        > code::before {
-          top: calc(
-            -1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r))
-          );
-          height: calc(var(--tree-spacer) - var(--_r));
-        }
-
-        &::before {
-          right: calc(50% + (var(--tree-line-width) / 2 * -1));
-          height: calc(var(--_r) + var(--tree-line-width));
-          background: transparent;
-          border-right: var(--tree-line-width) solid var(--tree-line-color);
-          border-top: var(--tree-line-width) solid var(--tree-line-color);
-          border-top-right-radius: var(--_r);
-          box-sizing: border-box;
-        }
-      }
-
-      /* only-child case: hide stub and extend child's drop */
-      &:only-child {
-        &::before {
-          display: none;
-        }
-
-        > code {
-          &::before {
-            top: calc(-1 * (var(--tree-spacer) + (var(--tree-line-width) * 2)));
-            height: calc(var(--tree-spacer) + (var(--tree-line-width)));
-          }
-        }
-      }
-    }
   }
 
   /* Vertical children (ol) */
   ol {
-    list-style: none;
     margin: calc((var(--tree-spacer) * -1)) auto 0;
     padding: calc(var(--tree-spacer)) var(--tree-spacer) 0
       calc(var(--tree-spacer) * 2);
@@ -177,9 +171,8 @@
         left: calc(var(--tree-spacer) * -1 - var(--tree-line-width));
         top: calc(var(--tree-spacer) / -2);
         bottom: calc(var(--tree-spacer) / -2);
-        width: var(--tree-line-width);
         height: auto;
-        background: var(--tree-line-color);
+        border-left: var(--tree-line-width) solid var(--tree-line-color);
       }
 
       > code {
