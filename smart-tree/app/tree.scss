@@ -56,16 +56,13 @@
   > ul ul > li {
     padding-top: calc(var(--tree-spacer) + var(--_tree-line-width));
 
-    &:not(:first-child):not(:last-child),
-    &:only-child {
-      > code::before {
-        content: "";
-        position: absolute;
-        left: calc(50% - var(--_tree-line-half));
-        top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
-        height: var(--tree-spacer);
-        border-left: var(--_tree-line-width) solid var(--tree-line-color);
-      }
+    > code::before {
+      content: "";
+      position: absolute;
+      left: calc(50% - var(--_tree-line-half));
+      top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
+      height: var(--tree-spacer);
+      border-left: var(--_tree-line-width) solid var(--tree-line-color);
     }
 
     &:not(:only-child) {
@@ -209,7 +206,7 @@
       content: "";
       position: absolute;
       top: 0;
-      left: calc(50% - var(--_r) - var(--_tree-line-half));
+      right: calc(50% - var(--_tree-line-half));
       width: var(--_r);
       height: calc(var(--tree-spacer) + var(--_tree-line-width));
       border-right: var(--_tree-line-width) solid var(--tree-line-color);
@@ -221,8 +218,7 @@
       content: "";
       position: absolute;
       left: calc(var(--tree-spacer) - var(--_tree-line-width));
-      right: calc(50% - var(--_r) / 2);
-      right: calc(50% + (var(--_r) + var(--_tree-line-width) / 2));
+      right: calc(50% + var(--_r) - var(--_tree-line-half));
       top: calc(var(--tree-spacer));
       height: calc(var(--tree-spacer) + var(--_tree-line-width));
       border-top: var(--_tree-line-width) solid var(--tree-line-color);
