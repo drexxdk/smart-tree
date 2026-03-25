@@ -8,7 +8,8 @@
   --tree-node-radius: 0.25em; /* border-radius of <code> node boxes */
 
   --tree-spacer: 6px;
-  --card-line-color: purple;
+  --card-line-color: pink;
+  --card-background-color: rgb(255 255 255 / 0.3);
 
   /* Do not override `--_tree-line-width` here — let JS set it on :root
      for device-pixel alignment. When JS isn't present fall back to the
@@ -46,7 +47,7 @@
     display: inline-flex;
     position: relative;
     padding: 10px;
-    background-color: white;
+    background-color: var(--card-background-color);
   }
 
   li {
@@ -137,6 +138,21 @@
       text-align: left;
       padding-top: var(--tree-spacer);
 
+      &:has(> ul) > code::after {
+        content: "";
+        position: absolute;
+        left: calc(100% + var(--_tree-line-width));
+        top: calc(50% - var(--_tree-line-half));
+        height: calc(
+          50% + var(--tree-spacer) + var(--_tree-line-width) +
+            var(--_tree-line-half)
+        );
+        width: calc(var(--tree-spacer) + var(--_tree-line-width));
+        border-top: var(--_tree-line-width) solid var(--tree-line-color);
+        border-right: var(--_tree-line-width) solid var(--tree-line-color);
+        border-top-right-radius: var(--_r);
+      }
+
       &::before {
         content: "";
         position: absolute;
@@ -152,19 +168,6 @@
 
       > ul {
         padding-top: var(--tree-spacer);
-
-        &::before {
-          content: "";
-          position: absolute;
-          height: 50%;
-          bottom: calc(100% - var(--tree-spacer));
-          width: 50%;
-          border-top: var(--_tree-line-width) solid var(--tree-line-color);
-          border-right: var(--_tree-line-width) solid var(--tree-line-color);
-          right: 50%;
-          border-top-right-radius: var(--_r);
-          z-index: -1;
-        }
       }
 
       &:not(:last-child) {
