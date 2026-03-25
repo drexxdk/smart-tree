@@ -21,8 +21,20 @@
   /* Clamped radii so arcs never exceed available space */
   --_r: min(var(--tree-radius), calc(var(--tree-spacer)));
 
-  ul > li > ul {
-    &::before {
+  ul > li {
+    &:not(:first-child):not(:last-child),
+    &:only-child {
+      > code::before {
+        content: "";
+        position: absolute;
+        left: calc(50% - var(--_tree-line-half));
+        top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
+        height: var(--tree-spacer);
+        background: var(--tree-line-color);
+        border-left: var(--_tree-line-width) solid var(--tree-line-color);
+      }
+    }
+    > ul::before {
       content: "";
       position: absolute;
       left: calc(50% - var(--_tree-line-half));
@@ -30,110 +42,81 @@
       height: var(--tree-spacer);
       border-left: var(--_tree-line-width) solid var(--tree-line-color);
     }
+
+    > code {
+      margin-left: calc(var(--tree-spacer) / 2);
+      margin-right: calc(var(--tree-spacer) / 2);
+      margin-bottom: calc(var(--tree-spacer));
+    }
+  }
+
+  code {
+    border: var(--_tree-line-width) solid var(--card-line-color);
+    border-radius: var(--tree-node-radius);
+    display: inline-flex;
+    position: relative;
+    padding: 10px;
+    background-color: white;
+  }
+
+  li {
+    position: relative;
+    display: table-cell;
   }
 
   /* Root node */
   > ul {
-    display: table;
-
-    li {
-      position: relative;
-      display: table-cell;
-      code {
-        border: var(--_tree-line-width) solid var(--card-line-color);
-        border-radius: var(--tree-node-radius);
-        display: inline-block;
-        position: relative;
-        padding: 10px;
-        background-color: white;
-        margin-left: calc(var(--tree-spacer) / 2);
-        margin-right: calc(var(--tree-spacer) / 2);
-        margin-bottom: calc(var(--tree-spacer));
-      }
-    }
-
     ul {
-      width: 100%;
-
       > li {
         padding-top: calc(var(--tree-spacer) + var(--_tree-line-width));
 
-        vertical-align: top;
-
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          border-top: var(--_tree-line-width) solid var(--tree-line-color);
-        }
-
-        > code {
+        &:not(:only-child) {
           &::before {
             content: "";
             position: absolute;
-            left: calc(50% - var(--_tree-line-half));
-            top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
-            width: var(--_tree-line-width);
-            height: var(--tree-spacer);
-            background: var(--tree-line-color);
-          }
-        }
-
-        /* first/last child tweaks (rounded arcs) */
-        &:not(:only-child):first-child {
-          > code::before {
-            top: calc(
-              -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
-            );
-            height: calc(var(--tree-spacer) - var(--_r));
-          }
-
-          &::before {
-            left: calc(50% + (var(--_tree-line-half) * -1));
-            height: calc(var(--_r) + var(--_tree-line-width));
-            background: transparent;
-            border-left: var(--_tree-line-width) solid var(--tree-line-color);
+            top: 0;
+            left: 0;
+            right: 0;
             border-top: var(--_tree-line-width) solid var(--tree-line-color);
-            border-top-left-radius: var(--_r);
-            box-sizing: border-box;
-          }
-        }
-
-        &:not(:only-child):last-child {
-          > code::before {
-            top: calc(
-              -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
-            );
-            height: calc(var(--tree-spacer) - var(--_r));
           }
 
-          &::before {
-            right: calc(50% + (var(--_tree-line-half) * -1));
-            height: calc(var(--_r) + var(--_tree-line-width));
-            background: transparent;
-            border-right: var(--_tree-line-width) solid var(--tree-line-color);
-            border-top: var(--_tree-line-width) solid var(--tree-line-color);
-            border-top-right-radius: var(--_r);
-            box-sizing: border-box;
+          &:first-child {
+            > code::before {
+              top: calc(
+                -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
+              );
+              height: calc(var(--tree-spacer) - var(--_r));
+            }
+
+            &::before {
+              left: calc(50% + (var(--_tree-line-half) * -1));
+              height: calc(var(--_r) + var(--_tree-line-width));
+              border-left: var(--_tree-line-width) solid var(--tree-line-color);
+              border-top-left-radius: var(--_r);
+            }
+          }
+
+          &:last-child {
+            > code::before {
+              top: calc(
+                -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
+              );
+              height: calc(var(--tree-spacer) - var(--_r));
+            }
+
+            &::before {
+              right: calc(50% + (var(--_tree-line-half) * -1));
+              height: calc(var(--_r) + var(--_tree-line-width));
+              border-right: var(--_tree-line-width) solid var(--tree-line-color);
+              border-top-right-radius: var(--_r);
+            }
           }
         }
 
         /* only-child case: hide stub and extend child's drop */
-        &:only-child {
-          &::before {
-            display: none;
-          }
-
-          > code {
-            &::before {
-              top: calc(
-                -1 * (var(--tree-spacer) + (var(--_tree-line-width) * 2))
-              );
-              height: calc(var(--tree-spacer) + (var(--_tree-line-width)));
-            }
-          }
+        &:only-child > code::before {
+          top: calc(-1 * (var(--tree-spacer) + (var(--_tree-line-width) * 2)));
+          height: calc(var(--tree-spacer) + (var(--_tree-line-width)));
         }
       }
     }
@@ -157,7 +140,6 @@
     align-items: flex-start;
     width: max-content;
     max-width: 100%;
-    text-align: left;
 
     > li {
       display: block;
@@ -174,22 +156,15 @@
         left: calc(var(--tree-spacer) * -1 - var(--_tree-line-width));
         top: calc(var(--tree-spacer) / -2);
         bottom: calc(var(--tree-spacer) / -2);
-        height: auto;
         border-left: var(--_tree-line-width) solid var(--tree-line-color);
       }
 
-      > code {
-        margin: 0;
-
-        &::before {
-          content: "";
-          position: absolute;
-          right: calc(100% + var(--_tree-line-width));
-          top: calc(50% - var(--_tree-line-half));
-          width: calc(var(--tree-spacer) + var(--_tree-line-width));
-          height: var(--_tree-line-width);
-          background: var(--tree-line-color);
-        }
+      > code::before {
+        content: "";
+        position: absolute;
+        right: calc(100% + var(--_tree-line-width));
+        top: calc(50% - var(--_tree-line-half));
+        width: calc(var(--tree-spacer) + var(--_tree-line-width));
       }
 
       > ul {
@@ -197,6 +172,7 @@
         margin-bottom: calc(var(--tree-spacer) * -1);
         margin-left: calc(var(--tree-spacer) * -1 / 2);
         margin-right: calc(var(--tree-spacer) * -1);
+
         &::before {
           content: "";
           position: absolute;
@@ -208,32 +184,30 @@
           right: 50%;
           border-top-right-radius: var(--_r);
           z-index: -1;
-          left: auto;
-          top: unset;
-          background-color: transparent;
         }
       }
 
-      &:first-child {
-        &::before {
-          top: calc(var(--_r));
-          left: calc((var(--tree-spacer) * -1) - var(--_tree-line-width));
-        }
+      &:not(:last-child) > code::before {
+        border-top: var(--_tree-line-width) solid var(--tree-line-color);
+      }
+
+      &:first-child::before {
+        top: calc(var(--_r));
+        left: calc((var(--tree-spacer) * -1) - var(--_tree-line-width));
       }
 
       &:last-child {
         &::before {
           bottom: calc(50% + var(--_r) - var(--_tree-line-width));
         }
+
         & > code::before {
           top: calc(50% - var(--_r) - var(--_tree-line-width));
           width: calc(var(--tree-spacer) + var(--_tree-line-width));
           height: calc(var(--_r) + var(--_tree-line-width));
-          background: transparent;
           border-left: var(--_tree-line-width) solid var(--tree-line-color);
           border-bottom: var(--_tree-line-width) solid var(--tree-line-color);
           border-bottom-left-radius: var(--_r);
-          box-sizing: border-box;
         }
       }
     }
@@ -250,11 +224,9 @@
         left: calc(50% - var(--_r) - var(--_tree-line-half));
         width: var(--_r);
         height: calc(var(--tree-spacer) + var(--_tree-line-width));
-        background: transparent;
         border-right: var(--_tree-line-width) solid var(--tree-line-color);
         border-bottom: var(--_tree-line-width) solid var(--tree-line-color);
         border-bottom-right-radius: var(--_r);
-        box-sizing: border-box;
       }
 
       &::after {
@@ -262,15 +234,12 @@
         position: absolute;
         left: calc(var(--tree-spacer) - var(--_tree-line-width));
         right: calc(50% - var(--_r) / 2);
-        background: var(--tree-line-color);
         right: calc(50% + (var(--_r) + var(--_tree-line-width) / 2));
         top: calc(var(--tree-spacer));
         height: calc(var(--tree-spacer) + var(--_tree-line-width));
-        background: transparent;
         border-top: var(--_tree-line-width) solid var(--tree-line-color);
         border-left: var(--_tree-line-width) solid var(--tree-line-color);
         border-top-left-radius: var(--_r);
-        box-sizing: border-box;
       }
     }
   }
