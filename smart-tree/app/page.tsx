@@ -1,46 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useRef } from "react";
 import "./tree.scss";
+import useDpi from "./hooks/useDpi";
 
 export default function Home() {
-  useEffect(() => {
-    function updateLineWidth() {
-      const dpr =
-        typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-      // Set the raw devicePixelRatio so CSS fallbacks can use it if needed
-      document.documentElement.style.setProperty("--dpi", String(dpr));
-
-      // Read the base CSS value for --tree-line-width (e.g. "2px")
-      const rootStyles = getComputedStyle(document.documentElement);
-      const baseRaw = rootStyles.getPropertyValue("--tree-line-width") || "2px";
-      const base = parseFloat(baseRaw) || 2;
-
-      // Compute an effective CSS pixel width that maps to an integer number
-      // of device pixels to avoid subpixel hairlines when zooming.
-      // Use ceil so we don't accidentally drop a device pixel and create
-      // a 1px gap compared to adjacent borders.
-      const effective = Math.ceil(base * dpr) / dpr;
-
-      document.documentElement.style.setProperty(
-        "--_tree-line-width",
-        `${effective}px`,
-      );
-    }
-
-    updateLineWidth();
-    window.addEventListener("resize", updateLineWidth);
-    window.addEventListener("orientationchange", updateLineWidth);
-    return () => {
-      window.removeEventListener("resize", updateLineWidth);
-      window.removeEventListener("orientationchange", updateLineWidth);
-    };
-  }, []);
+  const treeRef = useRef<HTMLDivElement | null>(null);
+  useDpi(treeRef);
 
   return (
     <>
       <h1>Example DOM structure diagram with rounded connectors</h1>
-      <div className="tree">
+      <div className="tree" ref={treeRef}>
         <ul>
           <li>
             <code>html</code>
@@ -160,6 +131,11 @@ export default function Home() {
                                   </li>
                                   <li>
                                     <code>a</code>
+                                    <ul>
+                                      <li>
+                                        <code>a</code>
+                                      </li>
+                                    </ul>
                                   </li>
                                   <li>
                                     <code>a</code>
