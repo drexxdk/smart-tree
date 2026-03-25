@@ -2,13 +2,13 @@
 .tree {
   /* ── Tree variables ──────────────────────────────────────
      Change these to configure the entire tree appearance.   */
-  --tree-line-color: #666; /* connector & node border color */
+  --tree-line-color: #ffffff; /* connector & node border color */
   --tree-line-width: 2px; /* thickness of every connector line & node border */
   --tree-radius: 10px; /* corner radius for rounded connectors (0 = square) */
   --tree-node-radius: 0.25em; /* border-radius of <code> node boxes */
 
   --tree-spacer: 6px;
-  --card-line-color: red;
+  --card-line-color: purple;
 
   /* Do not override `--_tree-line-width` here — let JS set it on :root
      for device-pixel alignment. When JS isn't present fall back to the
@@ -54,64 +54,67 @@
     display: table-cell;
   }
 
-  > ul ul > li {
-    padding-top: calc(var(--tree-spacer) + var(--_tree-line-width));
+  > ul {
+    padding: 20px;
+    ul > li {
+      padding-top: calc(var(--tree-spacer) + var(--_tree-line-width));
 
-    > code::before {
-      content: "";
-      position: absolute;
-      left: calc(50% - var(--_tree-line-half));
-      top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
-      height: var(--tree-spacer);
-      border-left: var(--_tree-line-width) solid var(--tree-line-color);
-    }
-
-    &:not(:only-child) {
-      &::before {
+      > code::before {
         content: "";
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        border-top: var(--_tree-line-width) solid var(--tree-line-color);
+        left: calc(50% - var(--_tree-line-half));
+        top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
+        height: var(--tree-spacer);
+        border-left: var(--_tree-line-width) solid var(--tree-line-color);
       }
 
-      &:first-child {
-        > code::before {
-          top: calc(
-            -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
-          );
-          height: calc(var(--tree-spacer) - var(--_r));
-        }
-
+      &:not(:only-child) {
         &::before {
-          left: calc(50% + (var(--_tree-line-half) * -1));
-          height: calc(var(--_r) + var(--_tree-line-width));
-          border-left: var(--_tree-line-width) solid var(--tree-line-color);
-          border-top-left-radius: var(--_r);
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          border-top: var(--_tree-line-width) solid var(--tree-line-color);
+        }
+
+        &:first-child {
+          > code::before {
+            top: calc(
+              -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
+            );
+            height: calc(var(--tree-spacer) - var(--_r));
+          }
+
+          &::before {
+            left: calc(50% + (var(--_tree-line-half) * -1));
+            height: calc(var(--_r) + var(--_tree-line-width));
+            border-left: var(--_tree-line-width) solid var(--tree-line-color);
+            border-top-left-radius: var(--_r);
+          }
+        }
+
+        &:last-child {
+          > code::before {
+            top: calc(
+              -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
+            );
+            height: calc(var(--tree-spacer) - var(--_r));
+          }
+
+          &::before {
+            right: calc(50% + (var(--_tree-line-half) * -1));
+            height: calc(var(--_r) + var(--_tree-line-width));
+            border-right: var(--_tree-line-width) solid var(--tree-line-color);
+            border-top-right-radius: var(--_r);
+          }
         }
       }
 
-      &:last-child {
-        > code::before {
-          top: calc(
-            -1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r))
-          );
-          height: calc(var(--tree-spacer) - var(--_r));
-        }
-
-        &::before {
-          right: calc(50% + (var(--_tree-line-half) * -1));
-          height: calc(var(--_r) + var(--_tree-line-width));
-          border-right: var(--_tree-line-width) solid var(--tree-line-color);
-          border-top-right-radius: var(--_r);
-        }
+      &:only-child > code::before {
+        top: calc(-1 * (var(--tree-spacer) + (var(--_tree-line-width) * 2)));
+        height: calc(var(--tree-spacer) + (var(--_tree-line-width)));
       }
-    }
-
-    &:only-child > code::before {
-      top: calc(-1 * (var(--tree-spacer) + (var(--_tree-line-width) * 2)));
-      height: calc(var(--tree-spacer) + (var(--_tree-line-width)));
     }
   }
 
