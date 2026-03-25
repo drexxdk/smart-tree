@@ -125,8 +125,8 @@
   /* Vertical children (ol) */
   ol {
     margin: calc((var(--tree-spacer) * -1)) auto 0;
-    padding: calc(var(--tree-spacer)) var(--tree-spacer) 0
-      calc(var(--tree-spacer) * 2);
+    padding: calc(var(--tree-spacer) + var(--_tree-line-width))
+      var(--tree-spacer) 0 calc(var(--tree-spacer) * 2);
     position: relative;
     display: flex;
     flex-direction: column;
