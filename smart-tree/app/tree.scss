@@ -22,19 +22,21 @@
   --_r: min(var(--tree-radius), calc(var(--tree-spacer)));
 
   ul > li {
-    > ul::before {
-      content: "";
-      position: absolute;
-      left: calc(50% - var(--_tree-line-half));
-      top: calc(var(--tree-spacer) * -1);
-      height: var(--tree-spacer);
-      border-left: var(--_tree-line-width) solid var(--tree-line-color);
+    & + li {
+      padding-left: var(--tree-spacer);
     }
 
-    > code {
-      margin-left: calc(var(--tree-spacer) / 2);
-      margin-right: calc(var(--tree-spacer) / 2);
-      margin-bottom: calc(var(--tree-spacer));
+    > ul {
+      padding-top: var(--tree-spacer);
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: calc(50% - var(--_tree-line-half));
+        top: 0;
+        height: var(--tree-spacer);
+        border-left: var(--_tree-line-width) solid var(--tree-line-color);
+      }
     }
   }
 
@@ -52,7 +54,6 @@
     display: table-cell;
   }
 
-  /* Root node */
   > ul ul > li {
     padding-top: calc(var(--tree-spacer) + var(--_tree-line-width));
 
@@ -108,25 +109,21 @@
       }
     }
 
-    /* only-child case: hide stub and extend child's drop */
     &:only-child > code::before {
       top: calc(-1 * (var(--tree-spacer) + (var(--_tree-line-width) * 2)));
       height: calc(var(--tree-spacer) + (var(--_tree-line-width)));
     }
   }
 
-  /* Horizontal children */
   ul {
     position: relative;
     display: table;
     text-align: center;
   }
 
-  /* Vertical children (ol) */
   ol {
-    margin: calc((var(--tree-spacer) * -1)) auto 0;
-    padding: calc(var(--tree-spacer) + var(--_tree-line-width))
-      var(--tree-spacer) 0 calc(var(--tree-spacer) * 2);
+    padding: calc(var(--tree-spacer) + var(--_tree-line-width)) 0 0
+      calc(var(--tree-spacer) + var(--_tree-line-width));
     position: relative;
     display: flex;
     flex-direction: column;
@@ -137,13 +134,10 @@
       text-align: left;
       padding-top: var(--tree-spacer);
 
-      /* shared vertical rail */
       &::before {
         content: "";
         position: absolute;
-        left: calc(var(--tree-spacer) * -1 - var(--_tree-line-width));
-        top: calc(var(--tree-spacer) / -2);
-        bottom: calc(var(--tree-spacer) / -2);
+
         border-left: var(--_tree-line-width) solid var(--tree-line-color);
       }
 
@@ -151,21 +145,16 @@
         content: "";
         position: absolute;
         right: calc(100% + var(--_tree-line-width));
-        top: calc(50% - var(--_tree-line-half));
-        width: calc(var(--tree-spacer) + var(--_tree-line-width));
       }
 
       > ul {
-        margin-top: var(--tree-spacer);
-        margin-bottom: calc(var(--tree-spacer) * -1);
-        margin-left: calc(var(--tree-spacer) * -1 / 2);
-        margin-right: calc(var(--tree-spacer) * -1);
+        padding-top: var(--tree-spacer);
 
         &::before {
           content: "";
           position: absolute;
           height: 50%;
-          bottom: 100%;
+          bottom: calc(100% - var(--tree-spacer));
           width: 50%;
           border-top: var(--_tree-line-width) solid var(--tree-line-color);
           border-right: var(--_tree-line-width) solid var(--tree-line-color);
@@ -175,13 +164,25 @@
         }
       }
 
-      &:not(:last-child) > code::before {
-        border-top: var(--_tree-line-width) solid var(--tree-line-color);
+      &:not(:last-child) {
+        &:before {
+          bottom: calc(var(--tree-spacer) / -2);
+        }
+        > code::before {
+          border-top: var(--_tree-line-width) solid var(--tree-line-color);
+          top: calc(50% - var(--_tree-line-half));
+          width: calc(var(--tree-spacer) + var(--_tree-line-width));
+        }
       }
 
       &:first-child::before {
         top: calc(var(--_r));
         left: calc((var(--tree-spacer) * -1) - var(--_tree-line-width));
+      }
+
+      &:not(:first-child)::before {
+        left: calc(var(--tree-spacer) * -1 - var(--_tree-line-width));
+        top: calc(var(--tree-spacer) / -2);
       }
 
       &:last-child {
@@ -217,7 +218,7 @@
     &::after {
       content: "";
       position: absolute;
-      left: calc(var(--tree-spacer) - var(--_tree-line-width));
+      left: 0;
       right: calc(50% + var(--_r) - var(--_tree-line-half));
       top: calc(var(--tree-spacer));
       height: calc(var(--tree-spacer) + var(--_tree-line-width));
