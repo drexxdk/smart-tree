@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
-/* Apply the splatter background to the html element with high specificity
-   so it's not accidentally overridden by other styles. Keep the body
-   transparent so components can layer on top. */
-html {
+body {
+  background-color: black;
+  color: white;
+}
+
+.tree {
   /* use the remote image first, fall back to the gradient while it loads */
   background-image: url("https://images.unsplash.com/photo-1763615445655-5e1fc4c549d4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z3JhZGllbnQlMjBwYXR0ZXJufGVufDB8fDB8fHww");
 
@@ -13,11 +15,7 @@ html {
     center center !important;
   background-repeat: no-repeat, no-repeat !important;
   background-attachment: fixed, fixed !important;
-}
-
-body {
-  background: transparent !important;
-  min-height: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  display: inline-flex;
+  max-width: 100%;
+  overflow: auto;
 }
