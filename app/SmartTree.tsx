@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import useDpiLineWidth from "./hooks/useDpiLineWidth";
+import useLineWidthDpi from "./hooks/useLineWidthDpi";
 import "./tree.scss";
 
 type SmartTreeProps = {
@@ -28,7 +28,7 @@ export default function SmartTree({
   padding = 20,
 }: SmartTreeProps) {
   const treeRef = useRef<HTMLDivElement | null>(null);
-  const { isLoading } = useDpiLineWidth(lineWidth, treeRef);
+  const { isLoading, lineWidthDpi } = useLineWidthDpi(lineWidth, treeRef);
 
   return (
     <div
@@ -42,6 +42,7 @@ export default function SmartTree({
           "--tree-line-border-radius": `${lineBorderRadius}px`,
           "--tree-seperator": `${seperator}px`,
           "--tree-padding": `${padding}px`,
+          "--tree-line-width": `${lineWidthDpi}px`,
         } as React.CSSProperties
       }
     >

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import type { RefObject } from "react";
 
-export default function useDpiLineWidth(
+export default function useLineWidthDpi(
   lineWidth: number,
   targetRef?: RefObject<HTMLElement | null> | null,
 ) {
-  const [applied, setApplied] = useState<boolean>(false);
+  // Initialize to the provided `lineWidth` so SSR and client initial HTML match.
+  const [lineWidthDpi, setDpiOptimizedLineWidth] = useState<number>(() => lineWidth);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -13,14 +15,13 @@ export default function useDpiLineWidth(
     function update() {
       const dpr = window.devicePixelRatio || 1;
       const effective = Math.ceil(lineWidth * dpr) / dpr;
+      setDpiOptimizedLineWidth(effective);
 
+      // mark as loaded when the target element is present; the caller
+      // will set the CSS variables via inline `style` using the returned value.
       const targetEl = (targetRef?.current as HTMLElement) ?? null;
-      if (targetEl) {
-        targetEl.style.setProperty("--tree-line-width", `${effective}px`);
-        // Also set internal variable used by SCSS calculations
-        targetEl.style.setProperty("--_tree-line-width", `${effective}px`);
-        setApplied(true);
-      }
+      if (targetEl) setIsLoading(false);
+      else setIsLoading(true);
     }
 
     update();
@@ -35,8 +36,7 @@ export default function useDpiLineWidth(
     };
   }, [lineWidth, targetRef]);
 
-  // Expose only a small public surface: whether the DPI-optimized value
-  // has been applied to the target element yet. The hook itself writes
-  // the CSS variables on the element; callers don't need the raw value.
-  return { isLoading: !applied };
+  // Return a small object: whether the hook has loaded styles (isLoading)
+  // and the DPI-optimized line width to be used in inline styles.
+  return { isLoading, lineWidthDpi };
 }

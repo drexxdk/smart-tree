@@ -18,7 +18,7 @@ export default function Home() {
         <h1 className="text-3xl text-center">
           Example DOM structure diagram with rounded connectors
         </h1>
-        <div className="flex gap-5 flex-wrap">
+        <div className="flex gap-5 flex-wrap justify-center">
           <div className="overflow-auto bg-white/10 p-2 rounded-3xl">
             <table>
               <thead>
