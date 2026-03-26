@@ -1,22 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
-import "./tree.scss";
-import useDpi from "./hooks/useDpi";
-import { getLineWidthFromElement } from "./hooks/getLineWidth";
+import { useState } from "react";
+import SmartTree from "./SmartTree";
 
 export default function Home() {
-  const [lineWidth, setLineWidth] = useState<number>(() => {
-    if (typeof window === "undefined") return 2;
-    const maybe = getLineWidthFromElement(
-      document.querySelector(".tree") ?? document.documentElement,
-    );
-    return typeof maybe === "number" ? maybe : 2;
-  });
-  const treeRef = useRef<HTMLDivElement | null>(null);
-  const [, dpiApplied] = useDpi(treeRef);
-
-  // No mount-time setState: CSS remains the initial source-of-truth.
+  const [lineWidth, setLineWidth] = useState<number>(2);
 
   return (
     <>
@@ -40,13 +28,6 @@ export default function Home() {
                     onChange={(e) => {
                       const v = Number(e.target.value);
                       setLineWidth(v);
-                      const el =
-                        treeRef.current ?? document.querySelector(".tree");
-                      if (el)
-                        (el as HTMLElement).style.setProperty(
-                          "--tree-line-width",
-                          `${v}px`,
-                        );
                     }}
                     name="line-width"
                   />
@@ -56,169 +37,168 @@ export default function Home() {
           </table>
         </div>
       </div>
-      <div className="tree" ref={treeRef}>
-        {!dpiApplied ? (
-          <div className="tree-loading">Loading...</div>
-        ) : (
-          <ul>
-            <li>
-              <code>html</code>
-              <ul>
-                <li>
-                  <code>head</code>
-                  <ul>
-                    <li>
-                      <code>title</code>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <code>body</code>
-                  <ul>
-                    <li>
-                      <code>header</code>
-                      <ul>
-                        <li>
-                          <code>h1</code>
-                        </li>
-                        <li>
-                          <code>p</code>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <code>nav</code>
-                      <ul>
-                        <li>
-                          <code>a</code>
-                        </li>
-                        <li>
-                          <code>a</code>
-                        </li>
-                        <li>
-                          <code>a</code>
-                        </li>
-                        <li>
-                          <code>a</code>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <code>main</code>
-                      <ul>
-                        <li>
-                          <code>h1</code>
-                        </li>
-                        <li>
-                          <code>article</code>
-                          <ul>
-                            <li>
-                              <code>h2</code>
-                            </li>
-                            <li>
-                              <code>p</code>
-                            </li>
-                            <li>
-                              <code>p</code>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <code>aside</code>
-                      <ul>
-                        <li>
-                          <code>h2</code>
-                        </li>
-                        <li>
-                          <code>p</code>
-                        </li>
-                        <li>
-                          <code>p</code>
-                          <ul>
-                            <li>
-                              <code>a</code>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <code>footer</code>
-                      <ul>
-                        <li>
-                          <code>nav</code>
-                          <ul>
-                            <li>
-                              <code>a</code>
-                            </li>
-                            <li>
-                              <code>a</code>
-                              <ul>
-                                <li>
-                                  <code>bpiojwaegpoijaweg</code>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <code>a</code>
-                              <ul>
-                                <li>
-                                  <code>a</code>
-                                </li>
-                                <li>
-                                  <code>b</code>
-                                  <ul>
-                                    <li>
-                                      <code>a</code>
-                                    </li>
-                                    <li>
-                                      <code>a</code>
-                                    </li>
-                                    <li>
-                                      <code>a</code>
-                                      <ul>
-                                        <li>
-                                          <code>a</code>
-                                        </li>
-                                      </ul>
-                                    </li>
-                                    <li>
-                                      <code>a</code>
-                                    </li>
-                                  </ul>
-                                </li>
-                                <li>
-                                  <code>c</code>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <code>a</code>
-                              <ul>
-                                <li>
-                                  <code>a</code>
-                                </li>
-                                <li>
-                                  <code>b</code>
-                                </li>
-                                <li>
-                                  <code>c</code>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        )}
-      </div>
+      <SmartTree
+        lineWidth={lineWidth}
+        loading={<div className="tree-loading">Loading...</div>}
+      >
+        <ul>
+          <li>
+            <code>html</code>
+            <ul>
+              <li>
+                <code>head</code>
+                <ul>
+                  <li>
+                    <code>title</code>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <code>body</code>
+                <ul>
+                  <li>
+                    <code>header</code>
+                    <ul>
+                      <li>
+                        <code>h1</code>
+                      </li>
+                      <li>
+                        <code>p</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <code>nav</code>
+                    <ul>
+                      <li>
+                        <code>a</code>
+                      </li>
+                      <li>
+                        <code>a</code>
+                      </li>
+                      <li>
+                        <code>a</code>
+                      </li>
+                      <li>
+                        <code>a</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <code>main</code>
+                    <ul>
+                      <li>
+                        <code>h1</code>
+                      </li>
+                      <li>
+                        <code>article</code>
+                        <ul>
+                          <li>
+                            <code>h2</code>
+                          </li>
+                          <li>
+                            <code>p</code>
+                          </li>
+                          <li>
+                            <code>p</code>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <code>aside</code>
+                    <ul>
+                      <li>
+                        <code>h2</code>
+                      </li>
+                      <li>
+                        <code>p</code>
+                      </li>
+                      <li>
+                        <code>p</code>
+                        <ul>
+                          <li>
+                            <code>a</code>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <code>footer</code>
+                    <ul>
+                      <li>
+                        <code>nav</code>
+                        <ul>
+                          <li>
+                            <code>a</code>
+                          </li>
+                          <li>
+                            <code>a</code>
+                            <ul>
+                              <li>
+                                <code>bpiojwaegpoijaweg</code>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <code>a</code>
+                            <ul>
+                              <li>
+                                <code>a</code>
+                              </li>
+                              <li>
+                                <code>b</code>
+                                <ul>
+                                  <li>
+                                    <code>a</code>
+                                  </li>
+                                  <li>
+                                    <code>a</code>
+                                  </li>
+                                  <li>
+                                    <code>a</code>
+                                    <ul>
+                                      <li>
+                                        <code>a</code>
+                                      </li>
+                                    </ul>
+                                  </li>
+                                  <li>
+                                    <code>a</code>
+                                  </li>
+                                </ul>
+                              </li>
+                              <li>
+                                <code>c</code>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <code>a</code>
+                            <ul>
+                              <li>
+                                <code>a</code>
+                              </li>
+                              <li>
+                                <code>b</code>
+                              </li>
+                              <li>
+                                <code>c</code>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </SmartTree>
     </>
   );
 }

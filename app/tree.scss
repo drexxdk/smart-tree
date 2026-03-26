@@ -11,12 +11,7 @@
   --card-background-color: rgb(255 255 255 / 0.3);
   --card-border-radius: 10px; /* border-radius of <code> node boxes */
 
-  /* gets overridden by JS for device-pixel alignment */
-  /* JS may set --_tree-line-width for pixel-aligned rendering; if it's missing,
-      the JS enhancement will skip applying and warn in the console. */
-  /* NOTE: no fallback provided here on purpose — require --tree-line-width to be defined */
-
-  --_tree-line-half: calc(var(--_tree-line-width) / 2);
+  --_tree-line-half: calc(var(--tree-line-width) / 2);
 
   /* Clamped radii so arcs never exceed available space */
   --_r: min(var(--line-border-radius), calc(var(--tree-spacer)));
@@ -25,15 +20,15 @@
     padding: 20px;
 
     ul > li {
-      padding-top: calc(var(--tree-spacer) + var(--_tree-line-width));
+      padding-top: calc(var(--tree-spacer) + var(--tree-line-width));
 
       > code::before {
         content: "";
         position: absolute;
         left: calc(50% - var(--_tree-line-half));
-        top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width)));
+        top: calc(-1 * (var(--tree-spacer) + var(--tree-line-width)));
         height: var(--tree-spacer);
-        border-left: var(--_tree-line-width) solid var(--tree-line-color);
+        border-left: var(--tree-line-width) solid var(--tree-line-color);
       }
 
       &:not(:only-child) {
@@ -43,47 +38,53 @@
           top: 0;
           left: 0;
           right: 0;
-          border-top: var(--_tree-line-width) solid var(--tree-line-color);
+          border-top: var(--tree-line-width) solid var(--tree-line-color);
         }
 
         &:first-child {
           > code::before {
-            top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r)));
+            top: calc(
+              -1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r))
+            );
             height: calc(var(--tree-spacer) - var(--_r));
           }
 
           &::before {
             left: calc(50% + (var(--_tree-line-half) * -1));
-            height: calc(var(--_r) + var(--_tree-line-width));
-            border-left: var(--_tree-line-width) solid var(--tree-line-color);
+            height: calc(var(--_r) + var(--tree-line-width));
+            border-left: var(--tree-line-width) solid var(--tree-line-color);
             border-top-left-radius: var(--_r);
           }
         }
 
         &:last-child {
           > code::before {
-            top: calc(-1 * (var(--tree-spacer) + var(--_tree-line-width) - var(--_r)));
+            top: calc(
+              -1 * (var(--tree-spacer) + var(--tree-line-width) - var(--_r))
+            );
             height: calc(var(--tree-spacer) - var(--_r));
           }
 
           &::before {
-            right: calc(50% - (var(--tree-spacer) / 2) - var(--_tree-line-half));
-            height: calc(var(--_r) + var(--_tree-line-width));
-            border-right: var(--_tree-line-width) solid var(--tree-line-color);
+            right: calc(
+              50% - (var(--tree-spacer) / 2) - var(--_tree-line-half)
+            );
+            height: calc(var(--_r) + var(--tree-line-width));
+            border-right: var(--tree-line-width) solid var(--tree-line-color);
             border-top-right-radius: var(--_r);
           }
         }
       }
 
       &:only-child > code::before {
-        top: calc(-1 * (var(--tree-spacer) + (var(--_tree-line-width) * 2)));
-        height: calc(var(--tree-spacer) + (var(--_tree-line-width)));
+        top: calc(-1 * (var(--tree-spacer) + (var(--tree-line-width) * 2)));
+        height: calc(var(--tree-spacer) + (var(--tree-line-width)));
       }
     }
   }
 
   code {
-    border: var(--_tree-line-width) solid var(--card-line-color);
+    border: var(--tree-line-width) solid var(--card-line-color);
     border-radius: var(--card-border-radius);
     display: inline-flex;
     position: relative;
@@ -113,7 +114,7 @@
         left: calc(50% - var(--_tree-line-half));
         top: 0;
         height: var(--tree-spacer);
-        border-left: var(--_tree-line-width) solid var(--tree-line-color);
+        border-left: var(--tree-line-width) solid var(--tree-line-color);
       }
     }
   }
