@@ -21,9 +21,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-h1 {
-  padding: 20px;
-  color: white;
-  font-size: 40px;
-}

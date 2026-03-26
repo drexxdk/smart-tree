@@ -12,9 +12,11 @@
   --card-border-radius: 10px; /* border-radius of <code> node boxes */
 
   /* gets overridden by JS for device-pixel alignment */
-  --_tree-line-width: 2px;
+  /* JS may set --_tree-line-width for pixel-aligned rendering; if it's missing,
+      the JS enhancement will skip applying and warn in the console. */
+  /* NOTE: no fallback provided here on purpose — require --tree-line-width to be defined */
 
-  --_tree-line-half: calc((var(--_tree-line-width, var(--tree-line-width))) / 2);
+  --_tree-line-half: calc(var(--_tree-line-width) / 2);
 
   /* Clamped radii so arcs never exceed available space */
   --_r: min(var(--line-border-radius), calc(var(--tree-spacer)));
