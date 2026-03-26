@@ -13,23 +13,18 @@ export default function useDpi(
 
   useEffect(() => {
     function updateLineWidth() {
-      const dpr =
-        typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-      // keep the raw DPR available as a CSS var for fallbacks
-      document.documentElement.style.setProperty("--dpi", String(dpr));
-
-      const rootStyles = getComputedStyle(document.documentElement);
-      const baseRaw = rootStyles.getPropertyValue("--tree-line-width") || "2px";
-      const base = parseFloat(baseRaw) || 2;
+      const dpr = window.devicePixelRatio || 1;
+      const el = targetRef?.current ?? null;
+      const base = el
+        ? parseFloat(
+            getComputedStyle(el).getPropertyValue("--tree-line-width"),
+          ) || 2
+        : 2;
 
       const effective = Math.ceil(base * dpr) / dpr;
       setEffectiveWidth(effective);
 
-      // If a target element is provided, set the effective width there.
-      const el = targetRef?.current ?? null;
-      if (el) {
-        el.style.setProperty("--_tree-line-width", `${effective}px`);
-      }
+      if (el) el.style.setProperty("--_tree-line-width", `${effective}px`);
     }
 
     updateLineWidth();
