@@ -71,7 +71,7 @@
       }
 
       &:not(:first-child):not(:last-child) > code::before {
-        height: calc(var(--tree-seperator) + var(--tree-line-width));
+        height: var(--tree-seperator);
       }
 
       &:only-child > code::before {
