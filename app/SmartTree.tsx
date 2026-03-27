@@ -15,6 +15,8 @@ type SmartTreeProps = {
   seperator?: number;
   padding?: number;
   lineBorderStyle?: "solid" | "dashed" | "dotted";
+  cardbackgroundColor?: string;
+  cardBorderStyle?: "solid" | "dashed" | "dotted";
 };
 
 export default function SmartTree({
@@ -28,6 +30,8 @@ export default function SmartTree({
   seperator = 20,
   padding = 20,
   lineBorderStyle = "solid",
+  cardbackgroundColor = "rgb(255 255 255 / 0.3)",
+  cardBorderStyle = "solid",
 }: SmartTreeProps) {
   const treeRef = useRef<HTMLDivElement | null>(null);
   const { isLoading, lineWidthDpi } = useLineWidthDpi(lineWidth, treeRef);
@@ -46,6 +50,8 @@ export default function SmartTree({
           "--tree-padding": `${padding}px`,
           "--tree-line-width": `${lineWidthDpi}px`,
           "--tree-line-border-style": lineBorderStyle,
+          "--tree-card-background-color": cardbackgroundColor,
+          "--tree-card-border-style": cardBorderStyle,
         } as React.CSSProperties
       }
     >

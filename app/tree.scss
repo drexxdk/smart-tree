@@ -10,8 +10,9 @@
   --tree-line-border-style: solid; /* border style for connectors (e.g. dashed) */
 
   --tree-card-color: white;
-  --tree-card-background: rgb(255 255 255 / 0.3);
+  --tree-card-background-color: rgb(255 255 255 / 0.3);
   --tree-card-border-radius: 8px; /* border-radius of <code> node boxes */
+  --tree-card-border-style: solid; /* border style for node boxes (e.g. dashed) */
 
   /* Clamped radii so arcs never exceed available space */
   --_r: min(var(--tree-line-border-radius), calc(var(--tree-seperator)));
@@ -29,31 +30,20 @@
           top: 0;
           left: 0;
           right: 0;
-          border-top: var(--tree-line-width) var(--tree-line-border-style)
-            var(--tree-line-color);
+          border-top: var(--tree-line-width) var(--tree-line-border-style) var(--tree-line-color);
         }
 
         &:first-child::before {
           left: calc(50% + (var(--_tree-line-half) * -1));
-          height: calc(
-            var(--_r) + var(--tree-line-width) +
-              (var(--tree-seperator) - var(--_r))
-          );
-          border-left: var(--tree-line-width) var(--tree-line-border-style)
-            var(--tree-line-color);
+          height: calc(var(--_r) + var(--tree-line-width) + (var(--tree-seperator) - var(--_r)));
+          border-left: var(--tree-line-width) var(--tree-line-border-style) var(--tree-line-color);
           border-top-left-radius: var(--_r);
         }
 
         &:last-child::before {
-          right: calc(
-            50% - (var(--tree-seperator) / 2) - var(--_tree-line-half)
-          );
-          height: calc(
-            var(--_r) + var(--tree-line-width) +
-              (var(--tree-seperator) - var(--_r))
-          );
-          border-right: var(--tree-line-width) var(--tree-line-border-style)
-            var(--tree-line-color);
+          right: calc(50% - (var(--tree-seperator) / 2) - var(--_tree-line-half));
+          height: calc(var(--_r) + var(--tree-line-width) + (var(--tree-seperator) - var(--_r)));
+          border-right: var(--tree-line-width) var(--tree-line-border-style) var(--tree-line-color);
           border-top-right-radius: var(--_r);
         }
       }
@@ -65,8 +55,7 @@
           position: absolute;
           left: calc(50% - var(--_tree-line-half));
           bottom: calc(100% + var(--tree-line-width));
-          border-left: var(--tree-line-width) var(--tree-line-border-style)
-            var(--tree-line-color);
+          border-left: var(--tree-line-width) var(--tree-line-border-style) var(--tree-line-color);
         }
       }
 
@@ -81,13 +70,12 @@
   }
 
   code {
-    border: var(--tree-line-width) var(--tree-line-border-style)
-      var(--tree-card-color);
+    border: var(--tree-line-width) var(--tree-card-border-style) var(--tree-card-color);
     border-radius: var(--tree-card-border-radius);
     display: inline-flex;
     position: relative;
     padding: 10px;
-    background-color: var(--tree-card-background);
+    background-color: var(--tree-card-background-color);
   }
 
   ul {
@@ -112,8 +100,7 @@
         left: calc(50% - var(--_tree-line-half));
         top: 0;
         height: var(--tree-seperator);
-        border-left: var(--tree-line-width) var(--tree-line-border-style)
-          var(--tree-line-color);
+        border-left: var(--tree-line-width) var(--tree-line-border-style) var(--tree-line-color);
       }
     }
   }

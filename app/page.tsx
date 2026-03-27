@@ -14,6 +14,39 @@ export default function Home() {
   const [lineBorderStyle, setLineBorderStyle] = useState<
     "solid" | "dashed" | "dotted"
   >("solid");
+  const [cardBorderStyle, setCardBorderStyle] = useState<
+    "solid" | "dashed" | "dotted"
+  >("solid");
+  const [cardBackgroundColor, setCardBackgroundColor] = useState<{
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+  }>({ r: 255, g: 255, b: 255, a: 0.3 });
+
+  function toHex(n: number) {
+    return n.toString(16).padStart(2, "0");
+  }
+
+  function rgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  function hexToRgb(hex: string) {
+    if (!hex) return null;
+    let h = hex.replace("#", "");
+    if (h.length === 3)
+      h = h
+        .split("")
+        .map((c) => c + c)
+        .join("");
+    if (h.length !== 6) return null;
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    if ([r, g, b].some((v) => Number.isNaN(v))) return null;
+    return { r, g, b };
+  }
 
   return (
     <>
@@ -34,7 +67,7 @@ export default function Home() {
               <tbody>
                 <tr>
                   <th className="p-2">
-                    <label htmlFor="card-color">color:</label>
+                    <label htmlFor="card-color">Line color:</label>
                   </th>
                   <td className="p-2">
                     <input
@@ -60,6 +93,100 @@ export default function Home() {
                       }
                       name="card-border-radius"
                     />
+                  </td>
+                </tr>
+                <tr>
+                  <th className="p-2">
+                    <label htmlFor="card-background-color">
+                      Background color:
+                    </label>
+                  </th>
+                  <td className="p-2">
+                    <input
+                      type="color"
+                      value={rgbToHex(cardBackgroundColor)}
+                      onChange={(e) => {
+                        const hex = e.target.value;
+                        const rgb = hexToRgb(hex);
+                        if (rgb) {
+                          setCardBackgroundColor((prev) => ({
+                            ...prev,
+                            r: rgb.r,
+                            g: rgb.g,
+                            b: rgb.b,
+                          }));
+                        }
+                      }}
+                      name="card-background-color"
+                    />
+                    <input
+                      type="range"
+                      id="alpha"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={cardBackgroundColor.a}
+                      onChange={(e) =>
+                        setCardBackgroundColor((prev) => ({
+                          ...prev,
+                          a: Number(e.target.value),
+                        }))
+                      }
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th className="p-2">
+                    <label htmlFor="card-border-style">Border style:</label>
+                  </th>
+                  <td className="p-2">
+                    <div className="inline-flex gap-4 flex-wrap items-center">
+                      <div className="inline-flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          id="solid"
+                          name="card-border-style"
+                          value="solid"
+                          checked={cardBorderStyle === "solid"}
+                          onChange={(e) =>
+                            setCardBorderStyle(
+                              e.target.value as "solid" | "dashed" | "dotted",
+                            )
+                          }
+                        />
+                        <label htmlFor="solid">Solid</label>
+                      </div>
+                      <div className="inline-flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          id="dashed"
+                          name="card-border-style"
+                          value="dashed"
+                          checked={cardBorderStyle === "dashed"}
+                          onChange={(e) =>
+                            setCardBorderStyle(
+                              e.target.value as "solid" | "dashed" | "dotted",
+                            )
+                          }
+                        />
+                        <label htmlFor="dashed">Dashed</label>
+                      </div>
+                      <div className="inline-flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          id="dotted"
+                          name="card-border-style"
+                          value="dotted"
+                          checked={cardBorderStyle === "dotted"}
+                          onChange={(e) =>
+                            setCardBorderStyle(
+                              e.target.value as "solid" | "dashed" | "dotted",
+                            )
+                          }
+                        />
+                        <label htmlFor="dotted">Dotted</label>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -235,6 +362,8 @@ export default function Home() {
         seperator={seperator}
         padding={padding}
         lineBorderStyle={lineBorderStyle}
+        cardbackgroundColor={`rgba(${cardBackgroundColor.r} ${cardBackgroundColor.g} ${cardBackgroundColor.b} / ${cardBackgroundColor.a})`}
+        cardBorderStyle={cardBorderStyle}
       >
         <ul>
           <li>
