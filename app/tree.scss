@@ -65,10 +65,17 @@
           position: absolute;
           left: calc(50% - var(--_tree-line-half));
           bottom: calc(100% + var(--tree-line-width));
-          height: calc(var(--tree-seperator) + var(--tree-line-width));
           border-left: var(--tree-line-width) var(--tree-line-border-style)
             var(--tree-line-color);
         }
+      }
+
+      &:not(:first-child):not(:last-child) > code::before {
+        height: calc(var(--tree-seperator) + var(--tree-line-width));
+      }
+
+      &:only-child > code::before {
+        height: calc((var(--tree-seperator) * 2) + var(--tree-line-width));
       }
     }
   }
@@ -99,7 +106,7 @@
     > ul {
       padding-top: var(--tree-seperator);
 
-      &::before {
+      &:not(:has(> :last-child:nth-child(1)))::before {
         content: "";
         position: absolute;
         left: calc(50% - var(--_tree-line-half));
