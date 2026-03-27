@@ -95,46 +95,7 @@ export default function Home() {
                     />
                   </td>
                 </tr>
-                <tr>
-                  <th className="p-2">
-                    <label htmlFor="card-background-color">
-                      Background color:
-                    </label>
-                  </th>
-                  <td className="p-2">
-                    <input
-                      type="color"
-                      value={rgbToHex(cardBackgroundColor)}
-                      onChange={(e) => {
-                        const hex = e.target.value;
-                        const rgb = hexToRgb(hex);
-                        if (rgb) {
-                          setCardBackgroundColor((prev) => ({
-                            ...prev,
-                            r: rgb.r,
-                            g: rgb.g,
-                            b: rgb.b,
-                          }));
-                        }
-                      }}
-                      name="card-background-color"
-                    />
-                    <input
-                      type="range"
-                      id="alpha"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={cardBackgroundColor.a}
-                      onChange={(e) =>
-                        setCardBackgroundColor((prev) => ({
-                          ...prev,
-                          a: Number(e.target.value),
-                        }))
-                      }
-                    />
-                  </td>
-                </tr>
+
                 <tr>
                   <th className="p-2">
                     <label htmlFor="card-border-style">Border style:</label>
@@ -189,6 +150,48 @@ export default function Home() {
                     </div>
                   </td>
                 </tr>
+                <tr>
+                  <th className="p-2">
+                    <label htmlFor="card-background-color">
+                      Background color:
+                    </label>
+                  </th>
+                  <td className="p-2">
+                    <div className="inline-flex gap-2 items-center">
+                      <input
+                        type="color"
+                        value={rgbToHex(cardBackgroundColor)}
+                        onChange={(e) => {
+                          const hex = e.target.value;
+                          const rgb = hexToRgb(hex);
+                          if (rgb) {
+                            setCardBackgroundColor((prev) => ({
+                              ...prev,
+                              r: rgb.r,
+                              g: rgb.g,
+                              b: rgb.b,
+                            }));
+                          }
+                        }}
+                        name="card-background-color"
+                      />
+                      <input
+                        type="range"
+                        id="alpha"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={cardBackgroundColor.a}
+                        onChange={(e) =>
+                          setCardBackgroundColor((prev) => ({
+                            ...prev,
+                            a: Number(e.target.value),
+                          }))
+                        }
+                      />
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -215,24 +218,7 @@ export default function Home() {
                     />
                   </td>
                 </tr>
-                <tr>
-                  <th className="p-2">
-                    <label htmlFor="line-width">Width:</label>
-                  </th>
-                  <td className="p-2">
-                    <input
-                      type="range"
-                      min={1}
-                      max={20}
-                      value={lineWidth}
-                      onChange={(e) => {
-                        const v = Number(e.target.value);
-                        setLineWidth(v);
-                      }}
-                      name="line-width"
-                    />
-                  </td>
-                </tr>
+
                 <tr>
                   <th className="p-2">
                     <label htmlFor="line-border-radius">Border radius:</label>
@@ -302,6 +288,24 @@ export default function Home() {
                         <label htmlFor="dotted">Dotted</label>
                       </div>
                     </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="p-2">
+                    <label htmlFor="line-width">Width:</label>
+                  </th>
+                  <td className="p-2">
+                    <input
+                      type="range"
+                      min={1}
+                      max={20}
+                      value={lineWidth}
+                      onChange={(e) => {
+                        const v = Number(e.target.value);
+                        setLineWidth(v);
+                      }}
+                      name="line-width"
+                    />
                   </td>
                 </tr>
               </tbody>
