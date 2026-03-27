@@ -64,8 +64,8 @@
           content: "";
           position: absolute;
           left: calc(50% - var(--_tree-line-half));
-          top: calc(-1 * (var(--tree-seperator) + var(--tree-line-width)));
-          height: var(--tree-seperator);
+          bottom: calc(100% + var(--tree-line-width));
+          height: calc(var(--tree-seperator) + var(--tree-line-width));
           border-left: var(--tree-line-width) var(--tree-line-border-style)
             var(--tree-line-color);
         }
