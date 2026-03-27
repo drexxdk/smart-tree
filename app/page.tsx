@@ -11,6 +11,9 @@ export default function Home() {
   const [lineBorderRadius, setLineBorderRadius] = useState<number>(8);
   const [seperator, setSeperator] = useState<number>(20);
   const [padding, setPadding] = useState<number>(20);
+  const [lineBorderStyle, setLineBorderStyle] = useState<
+    "solid" | "dashed" | "dotted"
+  >("solid");
 
   return (
     <>
@@ -120,6 +123,60 @@ export default function Home() {
                     />
                   </td>
                 </tr>
+                <tr>
+                  <th className="p-2">
+                    <label htmlFor="line-border-style">Border style:</label>
+                  </th>
+                  <td className="p-2">
+                    <div className="inline-flex gap-4 flex-wrap items-center">
+                      <div className="inline-flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          id="solid"
+                          name="line-border-style"
+                          value="solid"
+                          checked={lineBorderStyle === "solid"}
+                          onChange={(e) =>
+                            setLineBorderStyle(
+                              e.target.value as "solid" | "dashed" | "dotted",
+                            )
+                          }
+                        />
+                        <label htmlFor="solid">Solid</label>
+                      </div>
+                      <div className="inline-flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          id="dashed"
+                          name="line-border-style"
+                          value="dashed"
+                          checked={lineBorderStyle === "dashed"}
+                          onChange={(e) =>
+                            setLineBorderStyle(
+                              e.target.value as "solid" | "dashed" | "dotted",
+                            )
+                          }
+                        />
+                        <label htmlFor="dashed">Dashed</label>
+                      </div>
+                      <div className="inline-flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          id="dotted"
+                          name="line-border-style"
+                          value="dotted"
+                          checked={lineBorderStyle === "dotted"}
+                          onChange={(e) =>
+                            setLineBorderStyle(
+                              e.target.value as "solid" | "dashed" | "dotted",
+                            )
+                          }
+                        />
+                        <label htmlFor="dotted">Dotted</label>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -177,6 +234,7 @@ export default function Home() {
         lineBorderRadius={lineBorderRadius}
         seperator={seperator}
         padding={padding}
+        lineBorderStyle={lineBorderStyle}
       >
         <ul>
           <li>
@@ -197,134 +255,134 @@ export default function Home() {
                     <code>Sophia Lee Martinez</code>
                     <ul>
                       <li>
-                          <code>Isabella Grace Nguyen</code>
+                        <code>Isabella Grace Nguyen</code>
                       </li>
                       <li>
-                          <code>Mason J. Reynolds</code>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                      <code>Lucas Benjamin Ortiz</code>
-                    <ul>
-                      <li>
-                          <code>Ava Rose Kim</code>
-                      </li>
-                      <li>
-                          <code>Ethan Michael Brown</code>
-                      </li>
-                      <li>
-                          <code>Mia Isabella Davis</code>
-                      </li>
-                      <li>
-                          <code>Jackson Thomas Wilson</code>
+                        <code>Mason J. Reynolds</code>
                       </li>
                     </ul>
                   </li>
                   <li>
-                      <code>Charlotte Anne Lopez</code>
+                    <code>Lucas Benjamin Ortiz</code>
                     <ul>
                       <li>
-                          <code>Henry Oliver Clark</code>
+                        <code>Ava Rose Kim</code>
                       </li>
                       <li>
-                          <code>Amelia Victoria Wright</code>
+                        <code>Ethan Michael Brown</code>
+                      </li>
+                      <li>
+                        <code>Mia Isabella Davis</code>
+                      </li>
+                      <li>
+                        <code>Jackson Thomas Wilson</code>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <code>Charlotte Anne Lopez</code>
+                    <ul>
+                      <li>
+                        <code>Henry Oliver Clark</code>
+                      </li>
+                      <li>
+                        <code>Amelia Victoria Wright</code>
                         <ul>
                           <li>
-                              <code>Daniel Lee Parker</code>
+                            <code>Daniel Lee Parker</code>
                           </li>
                           <li>
-                              <code>Harper Noelle Moore</code>
+                            <code>Harper Noelle Moore</code>
                           </li>
                           <li>
-                              <code>Benjamin Cole Rivera</code>
+                            <code>Benjamin Cole Rivera</code>
                           </li>
                         </ul>
                       </li>
                     </ul>
                   </li>
                   <li>
-                      <code>Evelyn Ruth Hughes</code>
+                    <code>Evelyn Ruth Hughes</code>
                     <ul>
                       <li>
-                          <code>Samuel Patrick Young</code>
+                        <code>Samuel Patrick Young</code>
                       </li>
                       <li>
-                          <code>Chloe Elizabeth Scott</code>
+                        <code>Chloe Elizabeth Scott</code>
                       </li>
                       <li>
-                          <code>Gabriel Isaac Foster</code>
+                        <code>Gabriel Isaac Foster</code>
                         <ul>
                           <li>
-                              <code>Natalie Joy Bennett</code>
+                            <code>Natalie Joy Bennett</code>
                           </li>
                         </ul>
                       </li>
                     </ul>
                   </li>
                   <li>
-                      <code>Matthew Scott Hall</code>
+                    <code>Matthew Scott Hall</code>
                     <ul>
                       <li>
-                          <code>Victoria Lynn Adams</code>
+                        <code>Victoria Lynn Adams</code>
                         <ul>
                           <li>
-                              <code>Joshua David King</code>
+                            <code>Joshua David King</code>
                           </li>
                           <li>
-                              <code>Olivia Jean Peters</code>
-                              <ul>
-                                <li>
-                                  <code>Margaret L. O'Connor</code>
-                                </li>
-                              </ul>
+                            <code>Olivia Jean Peters</code>
+                            <ul>
+                              <li>
+                                <code>Margaret L. O&apos;Connor</code>
+                              </li>
+                            </ul>
                           </li>
                           <li>
-                              <code>Ryan Thomas Blake</code>
-                              <ul>
-                                <li>
-                                  <code>Zoe Camille Brooks</code>
-                                </li>
-                                <li>
-                                  <code>Anthony R. Silva</code>
-                                  <ul>
-                                    <li>
-                                      <code>Sophia Lynn Barrett</code>
-                                    </li>
-                                    <li>
-                                      <code>William H. Price</code>
-                                    </li>
-                                    <li>
-                                      <code>Grace Emily Ford</code>
-                                      <ul>
-                                        <li>
-                                          <code>Jacob Aiden Knight</code>
-                                        </li>
-                                      </ul>
-                                    </li>
-                                    <li>
-                                      <code>Nora Quinn Ellis</code>
-                                    </li>
-                                  </ul>
-                                </li>
-                                <li>
-                                  <code>Leah Morgan Ortiz</code>
-                                </li>
-                              </ul>
+                            <code>Ryan Thomas Blake</code>
+                            <ul>
+                              <li>
+                                <code>Zoe Camille Brooks</code>
+                              </li>
+                              <li>
+                                <code>Anthony R. Silva</code>
+                                <ul>
+                                  <li>
+                                    <code>Sophia Lynn Barrett</code>
+                                  </li>
+                                  <li>
+                                    <code>William H. Price</code>
+                                  </li>
+                                  <li>
+                                    <code>Grace Emily Ford</code>
+                                    <ul>
+                                      <li>
+                                        <code>Jacob Aiden Knight</code>
+                                      </li>
+                                    </ul>
+                                  </li>
+                                  <li>
+                                    <code>Nora Quinn Ellis</code>
+                                  </li>
+                                </ul>
+                              </li>
+                              <li>
+                                <code>Leah Morgan Ortiz</code>
+                              </li>
+                            </ul>
                           </li>
                           <li>
-                              <code>Eric Daniel Hayes</code>
-                              <ul>
-                                <li>
-                                  <code>Anna K. Reed</code>
-                                </li>
-                                <li>
-                                  <code>Peter James Cole</code>
-                                </li>
-                                <li>
-                                  <code>Ruby Claire Stone</code>
-                                </li>
-                              </ul>
+                            <code>Eric Daniel Hayes</code>
+                            <ul>
+                              <li>
+                                <code>Anna K. Reed</code>
+                              </li>
+                              <li>
+                                <code>Peter James Cole</code>
+                              </li>
+                              <li>
+                                <code>Ruby Claire Stone</code>
+                              </li>
+                            </ul>
                           </li>
                         </ul>
                       </li>

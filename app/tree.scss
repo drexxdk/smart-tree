@@ -5,13 +5,13 @@
 
   --tree-line-color: white; /* connector & node border color */
   --tree-line-width: 2px; /* thickness of every connector line & node border */
+  --_tree-line-half: calc(var(--tree-line-width) / 2);
   --tree-line-border-radius: 10px; /* corner radius for rounded connectors (0 = square) */
+  --tree-line-border-style: solid; /* border style for connectors (e.g. dashed) */
 
   --tree-card-color: white;
   --tree-card-background: rgb(255 255 255 / 0.3);
   --tree-card-border-radius: 8px; /* border-radius of <code> node boxes */
-
-  --_tree-line-half: calc(var(--tree-line-width) / 2);
 
   /* Clamped radii so arcs never exceed available space */
   --_r: min(var(--tree-line-border-radius), calc(var(--tree-seperator)));
@@ -22,15 +22,6 @@
     ul > li {
       padding-top: calc(var(--tree-seperator) + var(--tree-line-width));
 
-      > code::before {
-        content: "";
-        position: absolute;
-        left: calc(50% - var(--_tree-line-half));
-        top: calc(-1 * (var(--tree-seperator) + var(--tree-line-width)));
-        height: var(--tree-seperator);
-        border-left: var(--tree-line-width) solid var(--tree-line-color);
-      }
-
       &:not(:only-child) {
         &::before {
           content: "";
@@ -38,53 +29,53 @@
           top: 0;
           left: 0;
           right: 0;
-          border-top: var(--tree-line-width) solid var(--tree-line-color);
+          border-top: var(--tree-line-width) var(--tree-line-border-style)
+            var(--tree-line-color);
         }
 
-        &:first-child {
-          > code::before {
-            top: calc(
-              -1 * (var(--tree-seperator) + var(--tree-line-width) - var(--_r))
-            );
-            height: calc(var(--tree-seperator) - var(--_r));
-          }
-
-          &::before {
-            left: calc(50% + (var(--_tree-line-half) * -1));
-            height: calc(var(--_r) + var(--tree-line-width));
-            border-left: var(--tree-line-width) solid var(--tree-line-color);
-            border-top-left-radius: var(--_r);
-          }
+        &:first-child::before {
+          left: calc(50% + (var(--_tree-line-half) * -1));
+          height: calc(
+            var(--_r) + var(--tree-line-width) +
+              (var(--tree-seperator) - var(--_r))
+          );
+          border-left: var(--tree-line-width) var(--tree-line-border-style)
+            var(--tree-line-color);
+          border-top-left-radius: var(--_r);
         }
 
-        &:last-child {
-          > code::before {
-            top: calc(
-              -1 * (var(--tree-seperator) + var(--tree-line-width) - var(--_r))
-            );
-            height: calc(var(--tree-seperator) - var(--_r));
-          }
-
-          &::before {
-            right: calc(
-              50% - (var(--tree-seperator) / 2) - var(--_tree-line-half)
-            );
-            height: calc(var(--_r) + var(--tree-line-width));
-            border-right: var(--tree-line-width) solid var(--tree-line-color);
-            border-top-right-radius: var(--_r);
-          }
+        &:last-child::before {
+          right: calc(
+            50% - (var(--tree-seperator) / 2) - var(--_tree-line-half)
+          );
+          height: calc(
+            var(--_r) + var(--tree-line-width) +
+              (var(--tree-seperator) - var(--_r))
+          );
+          border-right: var(--tree-line-width) var(--tree-line-border-style)
+            var(--tree-line-color);
+          border-top-right-radius: var(--_r);
         }
       }
 
-      &:only-child > code::before {
-        top: calc(-1 * (var(--tree-seperator) + (var(--tree-line-width) * 2)));
-        height: calc(var(--tree-seperator) + (var(--tree-line-width)));
+      &:not(:first-child):not(:last-child),
+      &:only-child {
+        > code::before {
+          content: "";
+          position: absolute;
+          left: calc(50% - var(--_tree-line-half));
+          top: calc(-1 * (var(--tree-seperator) + var(--tree-line-width)));
+          height: var(--tree-seperator);
+          border-left: var(--tree-line-width) var(--tree-line-border-style)
+            var(--tree-line-color);
+        }
       }
     }
   }
 
   code {
-    border: var(--tree-line-width) solid var(--tree-card-color);
+    border: var(--tree-line-width) var(--tree-line-border-style)
+      var(--tree-card-color);
     border-radius: var(--tree-card-border-radius);
     display: inline-flex;
     position: relative;
@@ -114,7 +105,8 @@
         left: calc(50% - var(--_tree-line-half));
         top: 0;
         height: var(--tree-seperator);
-        border-left: var(--tree-line-width) solid var(--tree-line-color);
+        border-left: var(--tree-line-width) var(--tree-line-border-style)
+          var(--tree-line-color);
       }
     }
   }
