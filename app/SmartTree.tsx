@@ -2,9 +2,10 @@
 
 import React, { useRef } from "react";
 import useLineWidthDpi from "./hooks/useLineWidthDpi";
-import "./tree.scss";
+import styles from "./tree.module.css";
+import clsx from "clsx";
 
-type SmartTreeProps = {
+type SmartTreeProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
   loading?: React.ReactNode;
   lineWidth?: number;
@@ -32,13 +33,16 @@ export default function SmartTree({
   lineBorderStyle = "solid",
   cardbackgroundColor = "rgb(255 255 255 / 0.3)",
   cardBorderStyle = "solid",
+  className,
+  style,
+  ...rest
 }: SmartTreeProps) {
   const treeRef = useRef<HTMLDivElement | null>(null);
   const { isLoading, lineWidthDpi } = useLineWidthDpi(lineWidth, treeRef);
 
   return (
     <div
-      className="tree"
+      className={clsx(styles.tree, className)}
       ref={treeRef}
       style={
         {
@@ -52,8 +56,10 @@ export default function SmartTree({
           "--tree-line-border-style": lineBorderStyle,
           "--tree-card-background-color": cardbackgroundColor,
           "--tree-card-border-style": cardBorderStyle,
+          ...style,
         } as React.CSSProperties
       }
+      {...rest}
     >
       {isLoading ? (loading ?? null) : (children ?? null)}
     </div>

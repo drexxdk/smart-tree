@@ -368,6 +368,11 @@ export default function Home() {
         lineBorderStyle={lineBorderStyle}
         cardbackgroundColor={`rgba(${cardBackgroundColor.r} ${cardBackgroundColor.g} ${cardBackgroundColor.b} / ${cardBackgroundColor.a})`}
         cardBorderStyle={cardBorderStyle}
+        style={{
+          backgroundImage:
+            'url("https://images.unsplash.com/photo-1763615445655-5e1fc4c549d4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z3JhZGllbnQlMjBwYXR0ZXJufGVufDB8fDB8fHww")',
+        }}
+        className="bg-fixed bg-cover bg-center inline-flex overflow-auto max-w-full"
       >
         <ul>
           <li>
